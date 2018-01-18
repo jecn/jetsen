@@ -15,12 +15,14 @@ import com.chanlin.jetsencloud.JetsenResourceActivity;
 import com.chanlin.jetsencloud.R;
 import com.chanlin.jetsencloud.database.DatabaseService;
 import com.chanlin.jetsencloud.entity.ResourceTree;
+import com.chanlin.jetsencloud.http.CommonUtils;
 import com.chanlin.jetsencloud.http.OKHttpUtil;
 import com.chanlin.jetsencloud.http.ReqCallBack;
 import com.chanlin.jetsencloud.util.Constant;
 import com.chanlin.jetsencloud.util.SDCardUtils;
 import com.chanlin.jetsencloud.util.SystemShare;
 import com.chanlin.jetsencloud.util.ToastUtils;
+import com.chanlin.jetsencloud.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,13 +94,6 @@ public class ResourceAdapter extends BaseAdapter{
                     tree.setFile_url("");
                     hodler.down.setImageResource(R.mipmap.img_download);
                 }else{
-                    hodler.down.setImageResource(R.mipmap.img_loading);
-                    Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.loading_animation);
-                    LinearInterpolator lin = new LinearInterpolator();
-                    animation.setInterpolator(lin);
-                    if (animation != null){
-                        hodler.down.startAnimation(animation);
-                    }
 //                    hodler.down.setImageResource(R.mipmap.img_download);
                     //未下载，调用下载，并更新数据库
                     //动态授权
@@ -109,6 +104,17 @@ public class ResourceAdapter extends BaseAdapter{
                     if(SDCardUtils.isSDCardEnable()){
                         String fileDir = SDCardUtils.getSDCardPath() + SDCardUtils.fileDir;
                         String file_download_host = SystemShare.getSettingString(mContext,Constant.file_download_host);
+                        if (!CommonUtils.isNetworkAvailable(mContext)) {
+                            ToastUtils.shortToast(mContext,R.string.http_exception);
+                            return;
+                        }
+                        hodler.down.setImageResource(R.mipmap.img_loading);
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.loading_animation);
+                        LinearInterpolator lin = new LinearInterpolator();
+                        animation.setInterpolator(lin);
+                        if (animation != null){
+                            hodler.down.startAnimation(animation);
+                        }
                         OKHttpUtil.downLoadFile(file_download_host + tree.getKey(), fileDir, new ReqCallBack<ResourceTree>() {
                             @Override
                             public void successCallBack(File file) {

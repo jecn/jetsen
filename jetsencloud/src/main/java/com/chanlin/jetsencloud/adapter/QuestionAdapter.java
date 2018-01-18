@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 
 public class QuestionAdapter extends BaseAdapter {
-    private static  final String TAG = "ResourceAdapter";
+    private static  final String TAG = "QuestionAdapter";
     Context mContext;
     LayoutInflater layoutInflater;
     QuestionController questionController;
@@ -40,6 +40,8 @@ public class QuestionAdapter extends BaseAdapter {
                 case MessageConfig.question_period_details_http_success_MESSAGE:
                     ToastUtils.shortToast(mContext,"下载完成！");
                    // list = questionController.getQuestionPeriodList();
+                    //更新列表
+
                     break;
 
             }

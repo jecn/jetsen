@@ -37,20 +37,8 @@ public class OKHttpUtil {
      * @param fileUrl 文件url
      * @param destFileDir 存储目标目录
      */
-    public static <T> void downLoadFile(String fileUrl, final String destFileDir, final ReqCallBack<T> callBack) {
-        final String fileName = fileUrl.substring(fileUrl.lastIndexOf('/')+1);
-        final File file = new File(destFileDir, fileName);
-        /*if (!FileUtils.createOrExistsDir(file)){
-            callBack.failedCallBack();
-            return;
-        }*/
-        if (file.exists()) {
-//            successCallBack((T) file, callBack);
-            callBack.successCallBack(file);
-            return;
-        }else {//不存在则创建文件
-            FileUtils.createOrExistsFile(file);
-        }
+    public static <T> void downLoadFile(final String fileUrl, final String destFileDir, final ReqCallBack<T> callBack) {
+
         final Request request = new Request.Builder().url(fileUrl).build();
         final Call call = getInstanceHttpClient().newCall(request);
         call.enqueue(new Callback() {
@@ -63,6 +51,19 @@ public class OKHttpUtil {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                final String fileName = fileUrl.substring(fileUrl.lastIndexOf('/')+1);
+                final File file = new File(destFileDir, fileName);
+        /*if (!FileUtils.createOrExistsDir(file)){
+            callBack.failedCallBack();
+            return;
+        }*/
+                if (file.exists()) {
+//            successCallBack((T) file, callBack);
+                    callBack.successCallBack(file);
+                    return;
+                }else {//不存在则创建文件
+                    FileUtils.createOrExistsFile(file);
+                }
                 InputStream is = null;
                 byte[] buf = new byte[2048];
                 int len = 0;

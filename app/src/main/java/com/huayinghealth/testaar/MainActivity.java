@@ -24,13 +24,14 @@ public class MainActivity extends Activity {
         extras.putString("teacher_id", "10016");
         extras.putString("file", "http://121.41.99.232:50001/");
         extras.putString("file_up", "http://121.41.99.232:20001/");
-        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6ImsxMnNjaG9vbF8wMV9kZXYiLCJ1c2VyX2lkIjoxMTAyNCwiZXhwIjoxNTE2NDMyNjk2LCJsb2dpbl90eXBlIjoxfQ.yeVSvCTPLkEhDosBOoSKBN2PLZaNn6q57jnPAnRyEAU");
+        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6ImsxMnNjaG9vbF8wMV9kZXYiLCJ1c2VyX2lkIjoxMTAyNCwiZXhwIjoxNTE2NDMxODU5LCJsb2dpbl90eXBlIjoxfQ.9ImuBQoXK-QQ-WPRUpP7VCuxdAzgSqMRJN3d1rj8bPc");
         String[] ids = new String[]{"2"};
         String[] names = new String[]{"数学"};
         extras.putStringArray("course_ids", ids);
         extras.putStringArray("course_names", names);
         it.putExtras(extras);
         startActivity(it);
+        finish();
     }
 
     private void getData(){

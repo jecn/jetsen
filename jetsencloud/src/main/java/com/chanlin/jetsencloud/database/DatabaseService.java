@@ -393,7 +393,9 @@ public class DatabaseService {
         ArrayList<ResourceTree> bookList = new ArrayList<ResourceTree>();
         LogUtil.showInfo(TAG,"findBookList resource_course_standard_id="+resource_course_standard_id);
         String where_cause = DatabaseObject.ResourceTreeTable.resource_course_standard_id
-                + " =? ";
+                + " =? and "
+                + DatabaseObject.ResourceTreeTable.resource_file_url
+                + " is not null";
         String[] where_args = new String[] { String.valueOf(resource_course_standard_id)};
         Cursor cursor=null;
         try {

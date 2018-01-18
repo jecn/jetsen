@@ -110,7 +110,7 @@ public final class DatabaseObject {
         private static final String resource_title = "title";//资源title
         private static final String resource_size = "size";//资源大小 ，字节
         private static final String resource_type = "type";//type //文件类型(1:word 2:PDF 3:PPT 4:Excel 5:图片 6:视频 7:音频 8:flash
-        private static final String resource_file_url = "url";//文件的本地地址
+        public static final String resource_file_url = "url";//文件的本地地址
         public static final String[] projection = new String[]{
                 resource_course_standard_id,resource_uuid,resource_key,resource_title,resource_size,resource_type,resource_file_url
         };

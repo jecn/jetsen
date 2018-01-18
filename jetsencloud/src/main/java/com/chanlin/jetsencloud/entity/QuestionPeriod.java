@@ -10,6 +10,15 @@ public class QuestionPeriod {
     private int course_standard_id;
     private int id;
     private String title;
+    private String isDownload;
+
+    public String getIsDownload() {
+        return isDownload;
+    }
+
+    public void setIsDownload(String isDownload) {
+        this.isDownload = isDownload;
+    }
 
     public int getCourse_standard_id() {
         return course_standard_id;
