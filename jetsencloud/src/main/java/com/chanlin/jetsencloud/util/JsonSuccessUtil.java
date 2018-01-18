@@ -144,9 +144,10 @@ public class JsonSuccessUtil {
             question.setCourse_standard_id(course_standard_id);
             question.setId(resultsJson.getInt("id"));
             question.setTitle(resultsJson.getString("title"));
+            question.setIsDownload("0");//默认为下载
             resourceQuestionPeriodList.add(question);
             //入库
-            DatabaseService.createQuestionPeriodTable(course_standard_id, question.getId(), question.getTitle());
+            DatabaseService.createQuestionPeriodTable(course_standard_id, question.getId(), question.getTitle(),question.getIsDownload());
         }
         return resourceQuestionPeriodList;
     }

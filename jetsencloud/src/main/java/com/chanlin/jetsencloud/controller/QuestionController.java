@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 
 import com.chanlin.jetsencloud.R;
+import com.chanlin.jetsencloud.adapter.QuestionAdapter;
 import com.chanlin.jetsencloud.database.DatabaseService;
 import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
 import com.chanlin.jetsencloud.http.CommonUtils;
@@ -191,6 +192,7 @@ public class QuestionController {
                         //表示全部下载完成
                         if (null != mMainHandler){
                             Message success = mMainHandler.obtainMessage(MessageConfig.question_period_details_http_success_MESSAGE);
+                            //success.obj = QuestionAdapter.pubPosition;
                             success.sendToTarget();
                         }
                     }

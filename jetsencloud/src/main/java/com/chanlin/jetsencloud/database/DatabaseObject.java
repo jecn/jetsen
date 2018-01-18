@@ -144,22 +144,25 @@ public final class DatabaseObject {
         public static final String question_period_course_standard_id = "course_standard_id";//课标id
         public static final String question_period_id = "id";//课时id
         private static final String question_period_title = "title";//课时title
+        private static final String question_isDownload = "isDownload";//是否下载
         public static final String[] projection = new String[]{
-                question_period_course_standard_id,question_period_id,question_period_title
+                question_period_course_standard_id,question_period_id,question_period_title,question_isDownload
         };
         public static String CREATE_SQL = "create table if not exists " + QuestionPeriod + "("
                 + question_period_course_standard_id + " integer,"
                 + question_period_id + " integer,"
-                + question_period_title + " varchar(200)"
+                + question_period_title + " varchar(200),"
+                + question_isDownload + " varchar(20)"
                 + ");";
 
         public static String DROP_SQL = "drop table if exists " + QuestionPeriod + ";";
 
-        public static ContentValues getContentValues(int course_standard_id, int id, String title) {
+        public static ContentValues getContentValues(int course_standard_id, int id, String title, String isDownload) {
             ContentValues values = new ContentValues();
             values.put(question_period_course_standard_id, course_standard_id);
             values.put(question_period_id, id);
             values.put(question_period_title, title);
+            values.put(question_isDownload,isDownload);
             return values;
         }
     }

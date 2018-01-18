@@ -211,7 +211,7 @@ public class DatabaseService {
     /**
      * 课堂习题课时列表Q
      */
-    public static boolean createQuestionPeriodTable(int course_standard_id, int id, String title){
+    public static boolean createQuestionPeriodTable(int course_standard_id, int id, String title,String isDownload){
         String where_cause = DatabaseObject.QuestionPeriodTable.question_period_course_standard_id
                 + " =? and "
                 + DatabaseObject.QuestionPeriodTable.question_period_id
@@ -224,13 +224,13 @@ public class DatabaseService {
                     where_args,null);
             if (cursor != null && cursor.moveToFirst()) {
                 DatabaseUtils.updateRecordFromTable(DatabaseObject.QuestionPeriod,null,
-                        DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title),
+                        DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title,isDownload),
                         where_cause,where_args);
                 Log.i(TAG, "createQuestionPeriodTable update");
                 return true;
             }else {
                 DatabaseUtils.insertRecordIntoTable(
-                        DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title),
+                        DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title,isDownload),
                         DatabaseObject.QuestionPeriod,null);
                 Log.i(TAG, "createQuestionPeriodTable insertRecordIntoTable");
                 return true;
@@ -444,6 +444,7 @@ public class DatabaseService {
                 book.setCourse_standard_id(question_period_course_standard_id);
                 book.setId(cursor.getInt(1));
                 book.setTitle(cursor.getString(2));
+                book.setIsDownload(cursor.getString(3));
                 bookList.add(book);
                 LogUtil.showInfo("database", "findResourceTreeList:"+bookList.toString());
             }

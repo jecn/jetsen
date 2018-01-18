@@ -248,6 +248,9 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 book_name = mybooks.get(position).getName();
                 text_book_name.setText(book_name);
                 Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
+                if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
+                    presenter.getFiles(-1,thisBook.getId(),0);
+                }
             }
         });
         popupWindow = new PopupWindow(view, getScreenWidth(this) / 4, ViewGroup.LayoutParams.WRAP_CONTENT, true);

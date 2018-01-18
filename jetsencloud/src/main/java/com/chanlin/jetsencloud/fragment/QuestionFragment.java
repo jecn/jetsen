@@ -49,6 +49,7 @@ public class QuestionFragment extends Fragment implements UpdateData {
     private void initView(View view){
         resourceListView = (ListView) view.findViewById(R.id.lv_question);
         resourceAdapter = new QuestionAdapter(mContext,questionPeriodList);
+        resourceAdapter.setListView(resourceListView);
         resourceListView.setAdapter(resourceAdapter);
     }
     private void initListener(){
