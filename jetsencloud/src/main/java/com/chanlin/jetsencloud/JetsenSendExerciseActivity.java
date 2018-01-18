@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -65,8 +66,10 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
     private ExpandablePresenter presenter;
 
     //popupWindow弹出框
+    private LinearLayout ll_sendexercise;
     private RelativeLayout relative_booklist;
     private TextView text_book_name;
+    private ImageView img_booklist;
     private ListView mlistview;
     private View view;
     private BooklistViewAdapter booklistViewAdapter;
@@ -123,6 +126,9 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         text_book_name.setOnClickListener(this);
         send_exercise = (TextView) findViewById(R.id.sendexercise);
         send_exercise.setOnClickListener(this);
+
+        img_booklist = (ImageView) findViewById(R.id.img_booklist);
+        ll_sendexercise = (LinearLayout) findViewById(R.id.ll_sendexercise);
 
 
     }
@@ -248,6 +254,13 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         popupWindow.setBackgroundDrawable(new BitmapDrawable()); // 解决PopupWindow 设置setOutsideTouchable无效
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                img_booklist.setImageResource(R.mipmap.img_booklist_right);
+                ll_sendexercise.setBackgroundResource(R.color.white);
+            }
+        });
         popX = getScreenWidth(this) / 8;
     }
 
@@ -284,6 +297,8 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
+                    ll_sendexercise.setBackgroundResource(R.color.translucence_gray);
+                    img_booklist.setImageResource(R.mipmap.img_booklist_bottom);
                     popupWindow.showAsDropDown(relative_booklist, popX, 5);
 //                    popupWindow.showAtLocation(view, Gravity.CENTER_HORIZONTAL, 0, 0);
                 }
