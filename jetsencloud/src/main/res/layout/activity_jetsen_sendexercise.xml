@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_sendexercise"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.chanlin.jetsencloud.JetsenSendExerciseActivity">
 
     <RelativeLayout
@@ -64,14 +65,12 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/dp_10"
-                android:paddingTop="@dimen/dp_10">
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/relative_booklist"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center">
 
                     <TextView
@@ -80,22 +79,25 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:text="华东师大版" />
+                        android:text="华东师大版"
+                        android:textColor="@color/common_title_bg"
+                        android:textSize="@dimen/motion_position_text_size" />
 
                     <ImageView
+                        android:id="@+id/img_booklist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:layout_toRightOf="@id/tv_book_name"
-                        android:src="@mipmap/img_right" />
+                        android:src="@mipmap/img_booklist_right" />
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorTitle" />
+                    android:layout_height="1px"
+                    android:background="@color/motion_detail_position_text" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/fileRv"
@@ -104,29 +106,32 @@
             </LinearLayout>
 
             <View
-                android:layout_width="1dp"
+                android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimaryDark"></View>
+                android:background="@color/motion_detail_position_text"></View>
 
             <LinearLayout
                 android:id="@+id/ll_question_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <GridView
                     android:id="@+id/gv_question_period_list"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:listSelector="@color/colorTitle"
-                    android:padding="@dimen/dp_5"
-                    android:numColumns="5">
+                    android:numColumns="5"
+                    android:padding="@dimen/dp_5">
 
                 </GridView>
+
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimaryDark"></View>
+                    android:layout_height="1px"
+                    android:background="@color/motion_detail_position_text"></View>
+
                 <ListView
                     android:id="@+id/lv_question_detial_list"
                     android:layout_width="match_parent"
