@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_resource"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="com.chanlin.jetsencloud.JetsenResourceActivity">
 
     <include layout="@layout/layout_title"></include>
@@ -52,7 +54,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:text="华东师大版"
-                        android:textColor="@color/motion_detail_position_text"
+                        android:textColor="@color/common_title_bg"
                         android:textSize="@dimen/motion_position_text_size" />
 
                     <ImageView

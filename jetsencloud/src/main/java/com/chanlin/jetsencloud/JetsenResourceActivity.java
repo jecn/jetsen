@@ -98,6 +98,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
     private QuestionFragment questionFragment;
 
     //popupWindow弹出框
+    private LinearLayout ll_resource;
     private RelativeLayout relative_booklist;
     private TextView text_book_name;
     private ImageView img_booklist;
@@ -228,6 +229,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         text_book_name.setOnClickListener(this);
 
         img_booklist = (ImageView) findViewById(R.id.img_booklist);
+        ll_resource = (LinearLayout) findViewById(R.id.ll_resource);
 
         initTabLineWidth();
         initListener();
@@ -278,7 +280,6 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
-                img_booklist.setImageResource(R.mipmap.img_booklist_right);
                 course_id = mybooks.get(position).getCourse_id();
                 book_id = mybooks.get(position).getId();
                 book_name = mybooks.get(position).getName();
@@ -288,8 +289,15 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         });
         popupWindow = new PopupWindow(view, getScreenWidth(this) / 4, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable()); // 解决PopupWindow 设置setOutsideTouchable无效
-        popupWindow.setOutsideTouchable(false);
-        popupWindow.setFocusable(false);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                img_booklist.setImageResource(R.mipmap.img_booklist_right);
+                ll_resource.setBackgroundResource(R.color.white);
+            }
+        });
         popX = getScreenWidth(this) / 8;
     }
 
@@ -406,10 +414,10 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
     private void updateBtnColor(){
         switch (currentIndex) {
             case 0:
-                mTabChatTv.setTextColor(Color.BLUE);
+                mTabChatTv.setTextColor(getResources().getColor(R.color.colorTitle));
                 break;
             case 1:
-                mTabContactsTv.setTextColor(Color.BLUE);
+                mTabContactsTv.setTextColor(getResources().getColor(R.color.colorTitle));
                 break;
             default:
                 break;
@@ -432,8 +440,9 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         }else if (id == R.id.tv_book_name){ // popupWindow弹框
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
-                    img_booklist.setImageResource(R.mipmap.img_booklist_right);
+//                    img_booklist.setImageResource(R.mipmap.img_booklist_right);
                 } else {
+                    ll_resource.setBackgroundResource(R.color.translucence_gray);
                     img_booklist.setImageResource(R.mipmap.img_booklist_bottom);
                     popupWindow.showAsDropDown(relative_booklist, popX, 5);
 //                    popupWindow.showAtLocation(view, Gravity.CENTER_HORIZONTAL, 0, 0);

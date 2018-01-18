@@ -22,6 +22,7 @@
 
             <TextView
                 android:id="@+id/id_chat_tv"
+                android:textColor="@color/colorTitle"
                 style="@style/motion_detail_position_text"
                 android:text="@string/common_overview" />
         </LinearLayout>

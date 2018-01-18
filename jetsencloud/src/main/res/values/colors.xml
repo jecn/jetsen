@@ -9,4 +9,5 @@
     <color name="common_title_bg">#222222</color>
 
     <color name="motion_detail_position_text">#848484</color>
+    <color name="translucence_gray">#4d000000</color>
 </resources>

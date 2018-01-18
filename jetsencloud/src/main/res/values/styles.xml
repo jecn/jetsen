@@ -38,7 +38,7 @@
     <style name="motion_detail_position_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/motion_detail_position_text</item>
+        <item name="android:textColor">@color/common_title_bg</item>
         <item name="android:textSize">@dimen/motion_position_text_size</item>
         <item name="android:layout_centerInParent">true</item>
     </style>
