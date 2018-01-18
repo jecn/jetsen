@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/id_switch_tab_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/id_tab_chat_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dip">
+
+            <TextView
+                android:id="@+id/id_chat_tv"
+                style="@style/motion_detail_position_text"
+                android:text="@string/common_overview" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/id_tab_friend_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dip"
+            android:saveEnabled="false">
+
+            <TextView
+                android:id="@+id/id_friend_tv"
+                style="@style/motion_detail_position_text"
+                android:layout_centerInParent="true"
+                android:text="@string/common_data" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/id_tab_line_iv"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tab_selected_pressed_holo"
+            android:contentDescription="tab"></ImageView>
+    </LinearLayout>
+
+</RelativeLayout>

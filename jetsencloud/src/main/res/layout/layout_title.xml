@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/register_title"
+    style="@style/activity_title">
+
+    <RelativeLayout
+        android:id="@+id/title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <ImageView
+            style="@style/activity_title_back"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/title_text"
+        style="@style/activity_title_text"
+        android:text="@string/download_resource"/>
+
+    <!--<RelativeLayout
+        android:id="@+id/bluetooth_add"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/img_repeat" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bluetooth_delete"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="40dp"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/bluetooth_delete"/>
+    </RelativeLayout>-->
+
+
+</RelativeLayout>
