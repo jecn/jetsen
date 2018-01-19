@@ -38,7 +38,12 @@ import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
 import com.chanlin.jetsencloud.expandable.ExpandView;
 import com.chanlin.jetsencloud.expandable.ExpandablePresenter;
 import com.chanlin.jetsencloud.expandable.FileAdapter;
+import com.chanlin.jetsencloud.util.FileUtils;
+import com.chanlin.jetsencloud.util.StringUtils;
 import com.chanlin.jetsencloud.util.ToastUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +91,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
     private ArrayList<QuestionPeriod> questionPeriodList = new ArrayList<>();
     private ArrayList<QuestionPeriodDetail> questionContentList = new ArrayList<>();
     private ArrayList<QuestionPeriodDetail> addList = new ArrayList<>();//加载到选中列表中的对象
-    private int addType = 0;//选中题目的类型，一次只能选一种类型的题目
+    private String addType;//选中题目的类型，一次只能选一种类型的题目
     private LinearLayout ll_question_view;//右侧习题显示的view
     private GridView gv_question_period_list;//课时 列表
     private QuestionPeriodGridViewAdapter gridViewAdapter;
@@ -191,14 +196,39 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //点击某个listview的item时 选中或者取消选中
                 QuestionPeriodDetail detail = questionContentList.get(position);
-                if (detail.ischecked()){
-                    detail.setIschecked(false);
-                    addList.remove(detail);
+                //读取文件并解析
+                if (detail.getUrl() != null){
+                    String jsonStr = FileUtils.getJsonFile(detail.getUrl());
+                    try {
+                        JSONObject json = new JSONObject(jsonStr);
+                        int thisQuestionType = json.getInt("type");
+                        if (StringUtils.isEmpty(addType)){
+                            addType = String.valueOf(thisQuestionType);
+                        }else if (addType.equals(String.valueOf(thisQuestionType))){
+
+                            if (detail.ischecked()){
+                                detail.setIschecked(false);
+                                addList.remove(detail);
+                            }else {
+                                detail.setIschecked(true);
+                                addList.add(detail);
+                            }
+                            listViewAdapter.notifyDataSetChanged();
+                                    return;
+                        }else {
+                            ToastUt----------
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        ToastUtils.shortToast(mContext,R.string.no_question_file);
+                        return;
+                    }
+
+
                 }else {
-                    detail.setIschecked(true);
-                    addList.add(detail);
+                    ToastUtils.shortToast(mContext,R.string.no_question_file);
                 }
-                listViewAdapter.notifyDataSetChanged();
+
             }
         });
     }

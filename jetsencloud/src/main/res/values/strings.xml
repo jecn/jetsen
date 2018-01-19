@@ -15,4 +15,6 @@
     <string name="no_permission">未授予相关权限！</string>
     <string name="question_period">课时</string>
     <string name="no_question_list">没有选择题目</string>
+    <string name="no_question_file">题目不存在或者下载失败！</string>
+    <string name="json_err">题目解析失败！</string>
 </resources>
