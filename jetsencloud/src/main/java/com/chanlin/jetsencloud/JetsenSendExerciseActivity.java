@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
@@ -84,6 +85,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
     private int course_id;
     private int book_id;
     private String book_name;
+    private int number = 0;
 
 
     //定义发送消息的接口
@@ -204,19 +206,27 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                         int thisQuestionType = json.getInt("type");
                         if (StringUtils.isEmpty(addType)){
                             addType = String.valueOf(thisQuestionType);
+                            number++;
+                            detail.setIschecked(true);
+                            addList.add(detail);
+                            listViewAdapter.notifyDataSetChanged();
                         }else if (addType.equals(String.valueOf(thisQuestionType))){
-
                             if (detail.ischecked()){
                                 detail.setIschecked(false);
                                 addList.remove(detail);
+                                number--;
+                                if (number == 0){
+                                    addType = "";
+                                }
                             }else {
                                 detail.setIschecked(true);
                                 addList.add(detail);
+                                number++;
                             }
                             listViewAdapter.notifyDataSetChanged();
-                                    return;
+                            return;
                         }else {
-                            ToastUt----------
+                            Toast.makeText(mContext, "请选择相同类型的题目！", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -291,7 +301,11 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             @Override
             public void onDismiss() {
                 img_booklist.setImageResource(R.mipmap.img_booklist_right);
-                ll_sendexercise.setBackgroundResource(R.color.white);
+//                ll_sendexercise.setBackgroundResource(R.color.white);
+                // 设置背景颜色变暗
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 1f;
+                getWindow().setAttributes(lp);
             }
         });
         popX = getScreenWidth(this) / 8;
@@ -315,7 +329,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             if (addList == null || addList.size() < 1) {
                 //没选中题目
                 ToastUtils.shortToast(mContext, R.string.no_question_list);
-                finish();
+//                finish();
             } else {
                 Intent intent = getIntent();
                 setResult(Activity.RESULT_OK, intent);//返回页面1
@@ -330,10 +344,14 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
-                    ll_sendexercise.setBackgroundResource(R.color.translucence_gray);
+//                    ll_sendexercise.setBackgroundResource(R.color.translucence_gray);
                     img_booklist.setImageResource(R.mipmap.img_booklist_bottom);
                     popupWindow.showAsDropDown(relative_booklist, popX, 5);
 //                    popupWindow.showAtLocation(view, Gravity.CENTER_HORIZONTAL, 0, 0);
+                    // 设置背景颜色变暗
+                    WindowManager.LayoutParams lp = getWindow().getAttributes();
+                    lp.alpha = 0.7f;
+                    getWindow().setAttributes(lp);
                 }
         }
     }

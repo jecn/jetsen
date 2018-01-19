@@ -298,7 +298,10 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
             @Override
             public void onDismiss() {
                 img_booklist.setImageResource(R.mipmap.img_booklist_right);
-                ll_resource.setBackgroundResource(R.color.white);
+//                ll_resource.setBackgroundResource(R.color.white);
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 1f;
+                getWindow().setAttributes(lp);
             }
         });
         popX = getScreenWidth(this) / 8;
@@ -445,10 +448,13 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                     popupWindow.dismiss();
 //                    img_booklist.setImageResource(R.mipmap.img_booklist_right);
                 } else {
-                    ll_resource.setBackgroundResource(R.color.translucence_gray);
+//                    ll_resource.setBackgroundResource(R.color.translucence_gray);
                     img_booklist.setImageResource(R.mipmap.img_booklist_bottom);
                     popupWindow.showAsDropDown(relative_booklist, popX, 5);
 //                    popupWindow.showAtLocation(view, Gravity.CENTER_HORIZONTAL, 0, 0);
+                    WindowManager.LayoutParams lp = getWindow().getAttributes();
+                    lp.alpha = 0.7f;
+                    getWindow().setAttributes(lp);
                 }
         }
     }
