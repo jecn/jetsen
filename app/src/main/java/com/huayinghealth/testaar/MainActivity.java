@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
         extras.putString("api_url","http://dev.approute.kai12.cn/api/route");
         extras.putString("user_id", "11024");
         extras.putString("user_name", "深圳向");
+        extras.putString("sex","1");
         extras.putString("avatar", "");
         extras.putString("school_code", "k12school_01_dev");
         extras.putString("school_name", "K12开发学校01（高中）");

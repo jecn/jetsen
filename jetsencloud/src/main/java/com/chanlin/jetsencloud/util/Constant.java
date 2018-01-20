@@ -38,4 +38,6 @@ public class Constant {
 
 
 
+    public static final String SEX = "1";//性别 0:女，1:男
+
 }

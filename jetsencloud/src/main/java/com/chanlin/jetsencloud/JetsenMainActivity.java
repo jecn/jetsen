@@ -17,6 +17,7 @@ import com.chanlin.jetsencloud.adapter.GridViewAdapter;
 import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
 import com.chanlin.jetsencloud.util.Constant;
 import com.chanlin.jetsencloud.util.LogUtil;
+import com.chanlin.jetsencloud.util.StringUtils;
 import com.chanlin.jetsencloud.util.SystemShare;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,6 +34,7 @@ public class JetsenMainActivity extends AppCompatActivity {
     private Context mContext;
     private String name;//姓名
     private String avatar;//头像
+    private String sex;//性别
     private String school_name;//学校名字
     private String schoolCode;//学校id
     private String token;//token
@@ -72,6 +74,7 @@ public class JetsenMainActivity extends AppCompatActivity {
         host = bd.getString("api_url");
         avatar = bd.getString("avatar");
         name = bd.getString("user_name");
+        sex = bd.getString("sex");
         school_name = bd.getString("school_name");
         schoolCode = bd.getString("school_code");
         token = bd.getString("token");
@@ -143,10 +146,16 @@ public class JetsenMainActivity extends AppCompatActivity {
 
     private void initData(){
         LogUtil.showInfo(TAG,"init data");
+        int headImg = 0;
+        if (!StringUtils.isEmpty(sex) && Constant.SEX.equals(sex)){
+            headImg = R.mipmap.man;
+        }else {
+            headImg = R.mipmap.woman;
+        }
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.ic_launcher)
-                .showImageForEmptyUri(R.mipmap.ic_launcher)
-                .showImageOnFail(R.mipmap.ic_launcher)
+                .showImageOnLoading(headImg)
+                .showImageForEmptyUri(headImg)
+                .showImageOnFail(headImg)
                 .cacheInMemory(true)
                 .cacheOnDisk(true).considerExifParams(true).build();
 
