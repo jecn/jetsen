@@ -88,6 +88,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
         android:text="@string/sendexercise_title"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gv_course" />
 
@@ -98,6 +99,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
         android:text="@string/prepare_resource"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_sendexercise" />
 
