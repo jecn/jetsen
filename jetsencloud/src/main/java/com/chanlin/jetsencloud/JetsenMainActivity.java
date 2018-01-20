@@ -187,7 +187,7 @@ public class JetsenMainActivity extends AppCompatActivity {
         }
         if (requestCode == 1002 && resultCode == Activity.RESULT_OK){
             Bundle bundle = data.getExtras();
-            String string = bundle.getSerializable("resourceTreeList").toString();
+            String string = bundle.getSerializable("resourceTree").toString();
             Toast.makeText(this, "发送..." + "  " +string, Toast.LENGTH_SHORT).show();
         }
     }

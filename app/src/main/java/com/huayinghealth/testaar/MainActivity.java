@@ -15,6 +15,40 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Intent it = new Intent(this,JetsenMainActivity.class);
         Bundle extras = new Bundle();
+        /**
+         *
+         course_ids=[Ljava.lang.String;@2acd5fc
+         avatar=
+         teacher_id=158
+         file_up=http://fileup.kexinedu.net:8005/
+         api_url=http://approute.kexinedu.net/api/route
+         user_id=1021
+         sex=1
+         file=http://file.kexinedu.net:8004/
+         token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMTciLCJ1c2VyX2lkIjoxMDIxLCJleHAiOjE1MTY2OTkyNTYsImxvZ2luX3R5cGUiOjF9.MSc1WCT2u4TNeZx6W5eydVc31V21ZuYqwRkFwwEPpV4
+         user_name=张海涛
+         school_code=s_51150017
+         school_name=宜宾科信中学
+         course_names=[Ljava.lang.String;@9b21485
+         */
+
+        extras.putString("api_url","http://approute.kexinedu.net/api/route");
+        extras.putString("user_id", "1021");
+        extras.putString("user_name", "张海涛");
+        extras.putString("sex","1");
+        extras.putString("avatar", "");
+        extras.putString("school_code", "s_51150017");
+        extras.putString("school_name", "宜宾科信中学");
+        extras.putString("teacher_id", "10016");
+        extras.putString("file", "http://file.kexinedu.net:8004/");
+        extras.putString("file_up", "http://fileup.kexinedu.net:8005/");
+        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMTciLCJ1c2VyX2lkIjoxMDIxLCJleHAiOjE1MTY2OTkyNTYsImxvZ2luX3R5cGUiOjF9.MSc1WCT2u4TNeZx6W5eydVc31V21ZuYqwRkFwwEPpV4");
+        String[] ids = new String[]{"1","2","3"};
+        String[] names = new String[]{"语文","数学","英语"};
+        extras.putStringArray("course_ids", ids);
+        extras.putStringArray("course_names", names);
+        //测试地址
+        /*
         extras.putString("api_url","http://dev.approute.kai12.cn/api/route");
         extras.putString("user_id", "11024");
         extras.putString("user_name", "深圳向");
@@ -30,6 +64,7 @@ public class MainActivity extends Activity {
         String[] names = new String[]{"数学"};
         extras.putStringArray("course_ids", ids);
         extras.putStringArray("course_names", names);
+        */
         it.putExtras(extras);
         startActivity(it);
         finish();

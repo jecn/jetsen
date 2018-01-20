@@ -171,7 +171,7 @@ public class QuestionController {
             return;
         JSONArray resultsArrayJson = dataJson.getJSONArray("list");
         final int count = resultsArrayJson.length();
-
+        int errcount = 0;
         for (int a = 0; a < count; a++) {
             JSONObject resultsJson = resultsArrayJson.getJSONObject(a);
             final QuestionPeriodDetail detail = new QuestionPeriodDetail();
@@ -179,6 +179,17 @@ public class QuestionController {
             detail.setKey(resultsJson.getString("key"));
             detail.setUuid(resultsJson.getString("uuid"));
             String fileDir = SDCardUtils.getSDCardPath() + SDCardUtils.questionJsonFile;
+            if (detail.getKey() == null || "".equals(detail.getKey())){
+                errcount++;
+                if (errcount == count){
+                    if (null != mMainHandler){
+                        Message success = mMainHandler.obtainMessage(MessageConfig.question_period_details_http_success_MESSAGE);
+                        //success.obj = QuestionAdapter.pubPosition;
+                        success.sendToTarget();
+                    }
+                }
+                continue;
+            }
             OKHttpUtil.downLoadFile(file_download_host + detail.getKey(), fileDir, new ReqCallBack<QuestionPeriodDetail>() {
                 @Override
                 public void successCallBack(File file) {
