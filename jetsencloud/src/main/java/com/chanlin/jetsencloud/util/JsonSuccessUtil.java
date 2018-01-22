@@ -145,9 +145,11 @@ public class JsonSuccessUtil {
             question.setId(resultsJson.getInt("id"));
             question.setTitle(resultsJson.getString("title"));
             question.setIsDownload("0");//默认为下载
-            resourceQuestionPeriodList.add(question);
+
             //入库
-            DatabaseService.createQuestionPeriodTable(course_standard_id, question.getId(), question.getTitle(),question.getIsDownload());
+            String isDownlaod = DatabaseService.createQuestionPeriodTable(course_standard_id, question.getId(), question.getTitle(),question.getIsDownload());
+            question.setIsDownload(isDownlaod);
+            resourceQuestionPeriodList.add(question);
         }
         return resourceQuestionPeriodList;
     }

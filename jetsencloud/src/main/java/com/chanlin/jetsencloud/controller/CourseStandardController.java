@@ -39,7 +39,7 @@ public class CourseStandardController {
      * 网络获取 资源数据
      * @param bookId
      */
-    public void getCourseStandardList(int bookId){
+    public void getCourseStandardList(final int bookId){
         if(!CommonUtils.isNetworkAvailable(mContext)){
             return;
         }
@@ -63,6 +63,7 @@ public class CourseStandardController {
                     if (null != mMainHandler){
                         Message success = mMainHandler.obtainMessage(MessageConfig.course_standard_http_success_MESSAGE);
                         success.obj = result_json;
+                        success.arg1 = bookId;
                         success.sendToTarget();
                     }
                 }

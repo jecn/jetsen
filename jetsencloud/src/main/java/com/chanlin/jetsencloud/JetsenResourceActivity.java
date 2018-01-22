@@ -54,6 +54,8 @@ import com.chanlin.jetsencloud.http.MessageConfig;
 import com.chanlin.jetsencloud.util.JsonSuccessUtil;
 import com.chanlin.jetsencloud.util.LogUtil;
 import com.chanlin.jetsencloud.util.ToastUtils;
+import com.chanlin.jetsencloud.view.LoadingDialog;
+import com.chanlin.jetsencloud.view.LoadingProgressDialog;
 
 import org.json.JSONException;
 
@@ -71,7 +73,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
 
     public static boolean mIsGrant = false;//是否授权
     private FrameLayout fl_no_data,frameLayout_content;
-    ArrayList<Book> mybooks =null;//教材列表
+    ArrayList<Book> mybooks = new ArrayList<>();//教材列表
     Book thisBook = null;//当前选中的教材项
     CourseStandardTree courseStandardTree = null;//当前选中的课标树
     ArrayList<CourseStandardTree> courseStandardTreeArrayList = new ArrayList<>();//课标树、数据源
@@ -126,7 +128,9 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                             thisBook = mybooks.get(0);//默认选中第一条
                             //刷新数据
                             initData();
-                            courseStandardController.getCourseStandardList(thisBook.getId());
+                            for(Book b:mybooks){
+                                courseStandardController.getCourseStandardList(b.getId());
+                            }
                         }
                     }catch (JSONException e){
                         mHandler.sendEmptyMessage(MessageConfig.book_http_exception_MESSAGE);
@@ -138,13 +142,28 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                     break;
                 case MessageConfig.course_standard_http_success_MESSAGE:
                     LogUtil.showInfo("Result", "course_standard_http_success_MESSAGE result:" + (String) msg.obj);
-                    try{
-                        courseStandardTreeArrayList = JsonSuccessUtil.getCourseStandardTree(thisBook.getId(),(String)msg.obj);
-                        //刷新列表数据
-                        presenter.getFiles(-1,thisBook.getId(),0);
-                    }catch(JSONException e){
-                        mHandler.sendEmptyMessage(MessageConfig.book_http_exception_MESSAGE);
-                    }
+                    final String msgStr = (String)msg.obj;
+                    final int addBookid = msg.arg1;//解析json 传入book id
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    courseStandardTreeArrayList = JsonSuccessUtil.getCourseStandardTree(addBookid,msgStr);
+                                    if (null != mHandler){
+                                        Message success = mHandler.obtainMessage(MessageConfig.course_standard_json_success_message);
+                                        success.sendToTarget();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+
+                    break;
+                case MessageConfig.course_standard_json_success_message:
+                    //刷新列表数据
+                    presenter.getFiles(-1,thisBook.getId(),0);
+                    LoadingProgressDialog.loadingDialog.dismiss();
                     break;
                 case MessageConfig.resource_list_standard_http_success_MESSAGE:
                     try{
@@ -182,9 +201,10 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         questionController = new QuestionController(mContext,mHandler);
         checkWriteExternalStoragePermission();
         initView();
+        initPop();
         initData();
         refreshData();
-        initPop();
+
     }
     private void initView(){
         TextView mTvTitle = (TextView) findViewById(R.id.title_text);
@@ -259,6 +279,8 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
             //courseStandardTreeArrayList = DatabaseService.findCourseStandardTreeList(thisBook.getId());
 
             //列表目录
+            updatePopUI(0);
+            booklistViewAdapter.updateBookList(mybooks);
             presenter.getFiles(-1,thisBook.getId(),0);
         }
 
@@ -267,8 +289,10 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         //LoadingProgressDialog.show(mContext,true,true);
         //fl_no_data.setVisibility(View.VISIBLE);
         //frameLayout_content.setVisibility(View.GONE);
-        //如果没获取到则要到网络上获取数据
-        bookController.getBookList(mHandler,courseId);
+        //服务器上去刷新所有的 树状结构数据
+        LoadingProgressDialog.show(mContext,true,true);
+            bookController.getBookList(mHandler,courseId);
+
     }
 
     private void initPop() {
@@ -280,16 +304,10 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
-                course_id = mybooks.get(position).getCourse_id();
-                book_id = mybooks.get(position).getId();
-                book_name = mybooks.get(position).getName();
-                text_book_name.setText(book_name);
-                Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
-                if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
-                    presenter.getFiles(-1,thisBook.getId(),0);
-                }
+                updatePopUI(position);
             }
         });
+
         popupWindow = new PopupWindow(view, getScreenWidth(this) / 4, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable()); // 解决PopupWindow 设置setOutsideTouchable无效
         popupWindow.setOutsideTouchable(true);
@@ -306,7 +324,17 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         });
         popX = getScreenWidth(this) / 8;
     }
-
+    private void updatePopUI(int position){
+        course_id = mybooks.get(position).getCourse_id();
+        book_id = mybooks.get(position).getId();
+        book_name = mybooks.get(position).getName();
+        text_book_name.setText(book_name);
+        Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
+        if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
+            thisBook = mybooks.get(position);
+            presenter.getFiles(-1,thisBook.getId(),0);
+        }
+    }
     private void initListener(){
         fileRv.addOnItemTouchListener(new OnItemClickListener() {
             @Override

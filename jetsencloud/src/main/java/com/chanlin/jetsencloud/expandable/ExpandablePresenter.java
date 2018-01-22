@@ -20,6 +20,9 @@ public class ExpandablePresenter {
         mView = view;
     }
     public void getFiles(final  int position, int bookId ,int parentId){
+        if (parentId == 0){//如果获取根目录的数据
+            entityList.clear();
+        }
         updateFilesMultiEntity(position, bookId, parentId);
         mView.fillData(position, entityList);
     }
