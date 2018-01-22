@@ -10,6 +10,7 @@ import com.chanlin.jetsencloud.http.MessageConfig;
 import com.chanlin.jetsencloud.http.OKHttpUtil;
 import com.chanlin.jetsencloud.util.Constant;
 import com.chanlin.jetsencloud.util.SystemShare;
+import com.chanlin.jetsencloud.view.LoadingProgressDialog;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -35,6 +36,7 @@ public class BookController {
     //get请求
     public void getBookList(final Handler mMainHandler, String bookId){
         if(!CommonUtils.isNetworkAvailable(mContext)){
+            LoadingProgressDialog.loadingDialog.dismiss();
             return;
         }
         if (null != bookId){

@@ -128,7 +128,7 @@ public class JetsenMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //点击后跳转 传递值到另外一个页面
                 Intent it  = new Intent(JetsenMainActivity.this,JetsenSendExerciseActivity.class);
-                it.putExtra("courceId", 2 + "");
+                it.putExtra("courceId", 1 + "");
                 JetsenMainActivity.this.startActivityForResult(it, 1001);
             }
         });
@@ -138,7 +138,7 @@ public class JetsenMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //点击后跳转 传递值到另外一个页面
                 Intent it  = new Intent(JetsenMainActivity.this,JetsenPrepareResourceActivity.class);
-                it.putExtra("courceId", 2 + "");
+                it.putExtra("courceId", 1 + "");
                 JetsenMainActivity.this.startActivityForResult(it, 1002);
             }
         });

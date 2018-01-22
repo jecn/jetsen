@@ -88,6 +88,7 @@ public class QuestionAdapter extends BaseAdapter {
         ImageView iv = (ImageView) view.findViewById(R.id.down);
         iv.clearAnimation();
         iv.setImageResource(R.mipmap.img_delete);
+        questionPeriod.setIsDownload("1");
         //刷新数据库
         DatabaseService.createQuestionPeriodTable(questionPeriod.getCourse_standard_id(),questionPeriod.getId(),questionPeriod.getTitle(),questionPeriod.getIsDownload());
 

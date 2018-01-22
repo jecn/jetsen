@@ -12,11 +12,14 @@ public final class MessageConfig {
     public static final int book_http_false_MESSAGE = 10001;//cource失败id
     public static final int book_http_exception_MESSAGE = 11111;//cource异常id
 
+    public static final int book_json_success_message = 11000;// 数据解析成功
+
 
     public static final int course_standard_http_success_MESSAGE = 20000;//获取course_standard成功消息id
     public static final int course_standard_http_false_MESSAGE = 20001;//course_standard失败id
     public static final int course_standard_http_exception_MESSAGE = 21111;//course_standard异常id
 
+    public static final int course_standard_json_success_message = 21000;// 数据解析成功
 
     public static final int resource_list_standard_http_success_MESSAGE = 30000;//获取resource_list成功消息id
     public static final int resource_list_standard_http_false_MESSAGE = 30001;//resource_list失败id

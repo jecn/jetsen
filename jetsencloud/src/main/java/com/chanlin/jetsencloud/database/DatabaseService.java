@@ -211,7 +211,7 @@ public class DatabaseService {
     /**
      * 课堂习题课时列表Q
      */
-    public static boolean createQuestionPeriodTable(int course_standard_id, int id, String title,String isDownload){
+    public static String createQuestionPeriodTable(int course_standard_id, int id, String title,String isDownload){
         String where_cause = DatabaseObject.QuestionPeriodTable.question_period_course_standard_id
                 + " =? and "
                 + DatabaseObject.QuestionPeriodTable.question_period_id
@@ -223,17 +223,18 @@ public class DatabaseService {
                     DatabaseObject.QuestionPeriodTable.projection,where_cause,
                     where_args,null);
             if (cursor != null && cursor.moveToFirst()) {
-                DatabaseUtils.updateRecordFromTable(DatabaseObject.QuestionPeriod,null,
+             /*   DatabaseUtils.updateRecordFromTable(DatabaseObject.QuestionPeriod,null,
                         DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title,isDownload),
                         where_cause,where_args);
                 Log.i(TAG, "createQuestionPeriodTable update");
-                return true;
+                */
+                return cursor.getString(3);//把是否 存在数据库字段返回
             }else {
                 DatabaseUtils.insertRecordIntoTable(
                         DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title,isDownload),
                         DatabaseObject.QuestionPeriod,null);
                 Log.i(TAG, "createQuestionPeriodTable insertRecordIntoTable");
-                return true;
+                return isDownload;
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -241,7 +242,7 @@ public class DatabaseService {
             if (cursor != null)
                 cursor.close();
         }
-        return false;
+        return isDownload;
     }
 
     /**

@@ -2,6 +2,9 @@ package com.chanlin.jetsencloud.http;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -23,19 +26,26 @@ public abstract class HttpCallBack implements Callback {
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         String result_data = response.body().string();
-        if ("999999".equals(result_data)) {
-            this.onException();
-        } else {
-            Log.e("Photo", "onPostExecute");
-            Log.e("Photo", "result_data:" + result_data);
-            String finally_data = CommonUtils.getDataStrFromResult(result_data);
-            Log.e("Photo", "finally_data:" + finally_data);
-            if (CommonUtils.isSuccess(result_data)) {
-                this.onSuccess(finally_data);
+        try {
+            JSONObject js = new JSONObject(result_data);
+            int code = js.getInt("code");
+            if (code == 0) {
+                Log.e("Photo", "onPostExecute");
+                Log.e("Photo", "result_data:" + result_data);
+                String finally_data = CommonUtils.getDataStrFromResult(result_data);
+                Log.e("Photo", "finally_data:" + finally_data);
+                if (CommonUtils.isSuccess(result_data)) {
+                    this.onSuccess(finally_data);
+                } else {
+                    this.onFalse(finally_data);
+                }
             } else {
-                this.onFalse(finally_data);
+                this.onException();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
     }
 
     public abstract void onSuccess(String var1);

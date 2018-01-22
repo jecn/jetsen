@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.chanlin.jetsencloud.JetsenMainActivity;
 
@@ -13,6 +14,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
         Intent it = new Intent(this,JetsenMainActivity.class);
         Bundle extras = new Bundle();
         /**
@@ -42,8 +44,8 @@ public class MainActivity extends Activity {
         extras.putString("teacher_id", "10016");
         extras.putString("file", "http://file.kexinedu.net:8004/");
         extras.putString("file_up", "http://fileup.kexinedu.net:8005/");
-        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMTciLCJ1c2VyX2lkIjoxMDIxLCJleHAiOjE1MTY2OTkyNTYsImxvZ2luX3R5cGUiOjF9.MSc1WCT2u4TNeZx6W5eydVc31V21ZuYqwRkFwwEPpV4");
         String[] ids = new String[]{"1","2","3"};
+        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMTciLCJ1c2VyX2lkIjoxMDIxLCJleHAiOjE1MTY4Njg2NjIsImxvZ2luX3R5cGUiOjF9.J7s7-b_iyCb72RqCDlyvhNfzo-FKppVVNIhT0mMbhG0");
         String[] names = new String[]{"语文","数学","英语"};
         extras.putStringArray("course_ids", ids);
         extras.putStringArray("course_names", names);

@@ -26,7 +26,10 @@ public class BooklistViewAdapter extends BaseAdapter {
         this.mybooks = mybooks;
         this.layoutInflater = LayoutInflater.from(context);
     }
-
+    public void updateBookList(ArrayList<Book> books){
+        this.mybooks = books;
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         return mybooks.size();
