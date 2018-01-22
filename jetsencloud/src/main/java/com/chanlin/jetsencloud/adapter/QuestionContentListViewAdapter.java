@@ -1,6 +1,8 @@
 package com.chanlin.jetsencloud.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.chanlin.jetsencloud.R;
@@ -31,6 +34,28 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
     Context mContext;
     LayoutInflater layoutInflater;
     ArrayList<QuestionPeriodDetail> list = new ArrayList<>();
+    ViewHodler hodler;
+    private ListView listView;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+
+                    updateItem(msg.arg1);
+                    break;
+            }
+        }
+    };
+
+    private void updateItem(int position) {
+        if (listView == null){
+            return;
+        }
+
+    }
 
     public QuestionContentListViewAdapter(Context context, ArrayList<QuestionPeriodDetail> details){
         this.mContext = context;
@@ -41,6 +66,11 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
         this.list = details;
         notifyDataSetChanged();
     }
+
+    public void setListView(ListView view){
+        this.listView = view;
+    }
+
     @Override
     public int getCount() {
         return list.size();
@@ -58,10 +88,10 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         //这个view 就是习题详情展示的UI
         View view = convertView;
-        ViewHodler hodler = null;
+        hodler = null;
         if (convertView == null){
             hodler = new ViewHodler();
             view = layoutInflater.inflate(R.layout.item_question_content,parent,false);
@@ -80,12 +110,22 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
             hodler = (ViewHodler) convertView.getTag();
         }
         QuestionPeriodDetail detail = list.get(position);
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Message message = new Message();
+                message.arg1 = position;
+                message.what = 1;
+                mHandler.sendMessage(message);
+            }
+        };
         //解析文件json
-        String jstr = FileUtils.getJsonFile(detail.getUrl());
+        final String jstr = FileUtils.getJsonFile(detail.getUrl());
         if (StringUtils.isEmpty(jstr)){
             hodler.tv_file_title.setText("题目已删除！");
             hodler.tv_file_title.setVisibility(View.VISIBLE);
-            hodler.iv_file_title.setVisibility(View.INVISIBLE);
+            hodler.iv_file_title.setVisibility(View.GONE);
         }else {
             try {
                 Log.e("course_standard_id", jstr + "");
@@ -93,16 +133,17 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                 QuestionContent content = pullJson(jsonObject);
                 if (StringUtils.isEmpty(content.getTitle_key())){ // title_key  title
                     if (StringUtils.isEmpty(content.getTitle())){
-                        hodler.tv_file_title.setText("题目已删除！");
-                        hodler.tv_file_title.setVisibility(View.INVISIBLE);
+                        hodler.tv_file_title.setText("title题目已删除！");
+                        hodler.tv_file_title.setVisibility(View.GONE);
                     } else {
                         String text2 = "<span style=\"font-weight:600; color:rgb(74,74,74); fontsize:20px;\">数学伴我们成长</span><p></p>";
                         String text = content.getTitle();
                         hodler.tv_file_title.setText(Html.fromHtml(text));
+                        hodler.tv_file_title.setVisibility(View.VISIBLE);
                     }
-                    hodler.iv_file_title.setVisibility(View.INVISIBLE);
+                    hodler.iv_file_title.setVisibility(View.GONE);
                 }else if (content.getTitle_key().startsWith("<img ") ){//图片类型
-                    hodler.tv_file_title.setVisibility(View.INVISIBLE);
+                    hodler.tv_file_title.setVisibility(View.GONE);
                     hodler.iv_file_title.setVisibility(View.VISIBLE);
                     //base64转bitmap
                     String regEx = "<img src=\"data:image/png;base64,(.*?)\"/>";
@@ -113,20 +154,22 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                         hodler.iv_file_title.setImageBitmap(FileUtils.stringtoBitmap(c));
                     }
                 }else { // 文本或html类型
-                    hodler.iv_file_title.setVisibility(View.INVISIBLE);
+                    hodler.tv_file_title.setVisibility(View.VISIBLE);
+                    hodler.iv_file_title.setVisibility(View.GONE);
                     hodler.tv_file_title.setText(Html.fromHtml(content.getTitle_key()));
                 }
 
                 if (StringUtils.isEmpty(content.getPid_title_key())){ // pid_title  pid_title_key
                     if (StringUtils.isEmpty(content.getPid_title())){
-                        hodler.tv_pid_title.setText("题目已删除！");
-                        hodler.tv_pid_title.setVisibility(View.INVISIBLE);
+                        hodler.tv_pid_title.setText("Pid_title题目已删除！");
+                        hodler.tv_pid_title.setVisibility(View.GONE);
                     } else {
                         hodler.tv_pid_title.setText(content.getPid_title());
+                        hodler.tv_pid_title.setVisibility(View.VISIBLE);
                     }
-                    hodler.iv_pid_title.setVisibility(View.INVISIBLE);
+                    hodler.iv_pid_title.setVisibility(View.GONE);
                 } else if (content.getPid_title_key().startsWith("<img")){
-                    hodler.tv_pid_title.setVisibility(View.INVISIBLE);
+                    hodler.tv_pid_title.setVisibility(View.GONE);
                     hodler.iv_pid_title.setVisibility(View.VISIBLE);
                     //base64转bitmap
                     String regEx = "<img src=\"data:image/png;base64,(.*?)\"/>";
@@ -137,16 +180,17 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                         hodler.iv_pid_title.setImageBitmap(FileUtils.stringtoBitmap(c));
                     }
                 } else {
-                    hodler.iv_pid_title.setVisibility(View.INVISIBLE);
+                    hodler.tv_pid_title.setVisibility(View.VISIBLE);
+                    hodler.iv_pid_title.setVisibility(View.GONE);
                     hodler.tv_pid_title.setText(Html.fromHtml(content.getPid_title_key()));
                 }
 
                 if (StringUtils.isEmpty(content.getParse())){ // parse
-                    hodler.tv_parse.setText("题目已删除！");
-                    hodler.tv_parse.setVisibility(View.INVISIBLE);
-                    hodler.iv_parse.setVisibility(View.INVISIBLE);
+                    hodler.tv_parse.setText("Parse题目已删除！");
+                    hodler.tv_parse.setVisibility(View.GONE);
+                    hodler.iv_parse.setVisibility(View.GONE);
                 } else if (content.getParse().startsWith("<img")){
-                    hodler.tv_parse.setVisibility(View.INVISIBLE);
+                    hodler.tv_parse.setVisibility(View.GONE);
                     hodler.iv_parse.setVisibility(View.VISIBLE);
                     //base64转bitmap
                     String regEx = "<img src=\"data:image/png;base64,(.*?)\"/>";
@@ -157,16 +201,17 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                         hodler.iv_parse.setImageBitmap(FileUtils.stringtoBitmap(c));
                     }
                 } else {
-                    hodler.iv_parse.setVisibility(View.INVISIBLE);
-                    hodler.tv_pid_title.setText(Html.fromHtml(content.getParse()));
+                    hodler.tv_parse.setVisibility(View.VISIBLE);
+                    hodler.iv_parse.setVisibility(View.GONE);
+                    hodler.tv_parse.setText(Html.fromHtml(content.getParse()));
                 }
 
                 if (StringUtils.isEmpty(content.getParse_key())){ // parse_key
-                    hodler.tv_parse_title.setText("题目已删除！");
-                    hodler.tv_parse_title.setVisibility(View.INVISIBLE);
-                    hodler.iv_parse_title.setVisibility(View.INVISIBLE);
+                    hodler.tv_parse_title.setText("Parse_key题目已删除！");
+                    hodler.tv_parse_title.setVisibility(View.GONE);
+                    hodler.iv_parse_title.setVisibility(View.GONE);
                 } else if (content.getParse_key().startsWith("<img")){
-                    hodler.tv_parse_title.setVisibility(View.INVISIBLE);
+                    hodler.tv_parse_title.setVisibility(View.GONE);
                     hodler.iv_parse_title.setVisibility(View.VISIBLE);
                     //base64转bitmap
                     String regEx = "<img src=\"data:image/png;base64,(.*?)\"/>";
@@ -177,14 +222,16 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                         hodler.iv_parse_title.setImageBitmap(FileUtils.stringtoBitmap(c));
                     }
                 } else {
-                    hodler.iv_parse_title.setVisibility(View.INVISIBLE);
-                    hodler.tv_pid_title.setText(Html.fromHtml(content.getParse_key()));
+                    hodler.tv_parse_title.setVisibility(View.VISIBLE);
+                    hodler.iv_parse_title.setVisibility(View.GONE);
+                    hodler.tv_parse_title.setText(Html.fromHtml(content.getParse_key()));
                 }
                 String questionStr = content.getTitle_key();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
         if (detail.ischecked()){
             hodler.down.setImageResource(R.mipmap.period_check_on);
         }else{

@@ -121,10 +121,11 @@
                     android:id="@+id/gv_question_period_list"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:columnWidth="88dp"
                     android:listSelector="@color/colorTitle"
-                    android:numColumns="5"
+                    android:numColumns="auto_fit"
+                    android:scrollbars="none"
                     android:padding="@dimen/dp_5">
-
                 </GridView>
 
                 <View

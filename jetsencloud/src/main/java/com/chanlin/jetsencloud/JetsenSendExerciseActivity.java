@@ -161,7 +161,8 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 //resourceTreeList = DatabaseService.findResourceTreeList(entity.getId());
                 questionPeriodList = DatabaseService.findQuestionPeriodList(entity.getId());
 
-
+                number = 0;
+                addType = "";
                 courseStandardTree = entity;
                 //刷新课时数据
                 gridViewAdapter.updateAdapter(questionPeriodList);
@@ -188,6 +189,8 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 questionContentList = DatabaseService.findQuestionPeriodDetailListWhereUrlNotNull(questionPeriod.getId());
                 //清空选中 的题目
                 addList.clear();
+                number = 0;
+                addType = "";
 
                 listViewAdapter.updateList(questionContentList);
 
@@ -271,6 +274,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
 
         //setListView();
         listViewAdapter = new QuestionContentListViewAdapter(mContext, questionContentList);
+        listViewAdapter.setListView(lv_question_detial_list);
         lv_question_detial_list.setAdapter(listViewAdapter);
     }
 
