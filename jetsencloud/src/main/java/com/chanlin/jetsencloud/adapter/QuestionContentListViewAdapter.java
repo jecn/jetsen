@@ -1,6 +1,7 @@
 package com.chanlin.jetsencloud.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
@@ -138,7 +139,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                     } else {
                         String text2 = "<span style=\"font-weight:600; color:rgb(74,74,74); fontsize:20px;\">数学伴我们成长</span><p></p>";
                         String text = content.getTitle();
-                        hodler.tv_file_title.setText(Html.fromHtml(text));
+                        hodler.tv_file_title.setText(Html.fromHtml(text, imgGetter, null));
                         hodler.tv_file_title.setVisibility(View.VISIBLE);
                     }
                     hodler.iv_file_title.setVisibility(View.GONE);
@@ -156,7 +157,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                 }else { // 文本或html类型
                     hodler.tv_file_title.setVisibility(View.VISIBLE);
                     hodler.iv_file_title.setVisibility(View.GONE);
-                    hodler.tv_file_title.setText(Html.fromHtml(content.getTitle_key()));
+                    hodler.tv_file_title.setText(Html.fromHtml(content.getTitle_key(), imgGetter, null));
                 }
 
                 if (StringUtils.isEmpty(content.getPid_title_key())){ // pid_title  pid_title_key
@@ -164,7 +165,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                         hodler.tv_pid_title.setText("Pid_title题目已删除！");
                         hodler.tv_pid_title.setVisibility(View.GONE);
                     } else {
-                        hodler.tv_pid_title.setText(content.getPid_title());
+                        hodler.tv_pid_title.setText(Html.fromHtml(content.getPid_title(), imgGetter, null));
                         hodler.tv_pid_title.setVisibility(View.VISIBLE);
                     }
                     hodler.iv_pid_title.setVisibility(View.GONE);
@@ -182,7 +183,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                 } else {
                     hodler.tv_pid_title.setVisibility(View.VISIBLE);
                     hodler.iv_pid_title.setVisibility(View.GONE);
-                    hodler.tv_pid_title.setText(Html.fromHtml(content.getPid_title_key()));
+                    hodler.tv_pid_title.setText(Html.fromHtml(content.getPid_title_key(), imgGetter, null));
                 }
 
                 if (StringUtils.isEmpty(content.getParse())){ // parse
@@ -203,7 +204,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                 } else {
                     hodler.tv_parse.setVisibility(View.VISIBLE);
                     hodler.iv_parse.setVisibility(View.GONE);
-                    hodler.tv_parse.setText(Html.fromHtml(content.getParse()));
+                    hodler.tv_parse.setText(Html.fromHtml(content.getParse(), imgGetter, null));
                 }
 
                 if (StringUtils.isEmpty(content.getParse_key())){ // parse_key
@@ -224,7 +225,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
                 } else {
                     hodler.tv_parse_title.setVisibility(View.VISIBLE);
                     hodler.iv_parse_title.setVisibility(View.GONE);
-                    hodler.tv_parse_title.setText(Html.fromHtml(content.getParse_key()));
+                    hodler.tv_parse_title.setText(Html.fromHtml(content.getParse_key(), imgGetter, null));
                 }
                 String questionStr = content.getTitle_key();
             } catch (JSONException e) {
@@ -266,5 +267,17 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
 
 
     }
+
+    Html.ImageGetter imgGetter = new Html.ImageGetter() {
+        @Override
+        public Drawable getDrawable(String source) {
+            Drawable drawable = null;
+            drawable = Drawable.createFromPath(source);  // Or fetch it from the URL
+            // Important
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable
+                    .getIntrinsicHeight());
+            return drawable;
+        }
+    };
 
 }

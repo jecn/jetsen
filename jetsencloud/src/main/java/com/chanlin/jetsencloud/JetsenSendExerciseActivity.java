@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,8 +27,8 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.chanlin.jetsencloud.adapter.BooklistViewAdapter;
+import com.chanlin.jetsencloud.adapter.RecyclerViewAdapter;
 import com.chanlin.jetsencloud.adapter.QuestionContentListViewAdapter;
-import com.chanlin.jetsencloud.adapter.QuestionPeriodGridViewAdapter;
 import com.chanlin.jetsencloud.database.DatabaseService;
 import com.chanlin.jetsencloud.entity.Book;
 import com.chanlin.jetsencloud.entity.CourseStandardTree;
@@ -95,8 +93,9 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
     private ArrayList<QuestionPeriodDetail> addList = new ArrayList<>();//加载到选中列表中的对象
     private String addType;//选中题目的类型，一次只能选一种类型的题目
     private LinearLayout ll_question_view;//右侧习题显示的view
-    private GridView gv_question_period_list;//课时 列表
-    private QuestionPeriodGridViewAdapter gridViewAdapter;
+    private RecyclerView gv_question_period_list;//课时 列表
+//    private QuestionPeriodGridViewAdapter gridViewAdapter;
+    private RecyclerViewAdapter mAdapter;
     private ListView lv_question_detial_list;//问题列表
     private QuestionContentListViewAdapter listViewAdapter;
 
@@ -165,7 +164,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 addType = "";
                 courseStandardTree = entity;
                 //刷新课时数据
-                gridViewAdapter.updateAdapter(questionPeriodList);
+                mAdapter.updateAdapter(questionPeriodList);
                 if (questionPeriodList != null && questionPeriodList.size() > 0) {
                     ll_question_view.setVisibility(View.VISIBLE);
                     questionContentList = DatabaseService.findQuestionPeriodDetailListWhereUrlNotNull(questionPeriodList.get(0).getId());
@@ -176,14 +175,9 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             }
         });
 
-        gv_question_period_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAdapter.setItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //点击时那个？ 刷新listview
-                //gv_question_period_list.setFocusable(false);
-                //parent.setFocusable(true);
-                //
-
+            public void onItemClick(int position) {
                 QuestionPeriod questionPeriod = questionPeriodList.get(position);
                 //数据库查询 已经下载了 的 问题详情
                 questionContentList = DatabaseService.findQuestionPeriodDetailListWhereUrlNotNull(questionPeriod.getId());
@@ -191,11 +185,11 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 addList.clear();
                 number = 0;
                 addType = "";
-
+                mAdapter.updateAdapter(position, questionPeriodList);
                 listViewAdapter.updateList(questionContentList);
-
             }
         });
+
         lv_question_detial_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -267,10 +261,15 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
     private void setGridView() {
         //右侧内容
         ll_question_view = (LinearLayout) findViewById(R.id.ll_question_view);
-        gv_question_period_list = (GridView) findViewById(R.id.gv_question_period_list);
+        gv_question_period_list = (RecyclerView) findViewById(R.id.gv_question_period_list);
+        //设置布局管理器
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        gv_question_period_list.setLayoutManager(linearLayoutManager);
         lv_question_detial_list = (ListView) findViewById(R.id.lv_question_detial_list);
-        gridViewAdapter = new QuestionPeriodGridViewAdapter(mContext, questionPeriodList);
-        gv_question_period_list.setAdapter(gridViewAdapter);
+        mAdapter = new RecyclerViewAdapter(mContext, questionPeriodList);
+//        gridViewAdapter = new QuestionPeriodGridViewAdapter(mContext, questionPeriodList);
+        gv_question_period_list.setAdapter(mAdapter);
 
         //setListView();
         listViewAdapter = new QuestionContentListViewAdapter(mContext, questionContentList);
