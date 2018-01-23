@@ -228,6 +228,7 @@ public class DatabaseService {
                         where_cause,where_args);
                 Log.i(TAG, "createQuestionPeriodTable update");
                 */
+                String str = cursor.getString(3);
                 return cursor.getString(3);//把是否 存在数据库字段返回
             }else {
                 DatabaseUtils.insertRecordIntoTable(
@@ -243,6 +244,44 @@ public class DatabaseService {
                 cursor.close();
         }
         return isDownload;
+    }
+
+
+
+    /**
+     * 课堂习题课时列表Q
+     */
+    public static boolean updateQuestionPeriodTable(int course_standard_id, int id, String title,String isDownload){
+        String where_cause = DatabaseObject.QuestionPeriodTable.question_period_course_standard_id
+                + " =? and "
+                + DatabaseObject.QuestionPeriodTable.question_period_id
+                + " =?";
+        String[] where_args = new String[] {String.valueOf(course_standard_id),String.valueOf(id)};
+        Cursor cursor = null;
+        try {
+            cursor = DatabaseUtils.getRecordsFromTable(DatabaseObject.QuestionPeriod,null,
+                    DatabaseObject.QuestionPeriodTable.projection,where_cause,
+                    where_args,null);
+            if (cursor != null && cursor.moveToFirst()) {
+               DatabaseUtils.updateRecordFromTable(DatabaseObject.QuestionPeriod,null,
+                        DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title,isDownload),
+                        where_cause,where_args);
+                Log.i(TAG, "updateQuestionPeriodTable update");
+                return true;
+            }else {
+                DatabaseUtils.insertRecordIntoTable(
+                        DatabaseObject.QuestionPeriodTable.getContentValues(course_standard_id, id,title,isDownload),
+                        DatabaseObject.QuestionPeriod,null);
+                Log.i(TAG, "updateQuestionPeriodTable updateQuestionPeriodTable");
+                return true;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return false;
     }
 
     /**
