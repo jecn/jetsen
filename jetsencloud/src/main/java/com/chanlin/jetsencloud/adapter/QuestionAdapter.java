@@ -90,7 +90,7 @@ public class QuestionAdapter extends BaseAdapter {
         iv.setImageResource(R.mipmap.img_delete);
         questionPeriod.setIsDownload("1");
         //刷新数据库
-        DatabaseService.createQuestionPeriodTable(questionPeriod.getCourse_standard_id(),questionPeriod.getId(),questionPeriod.getTitle(),questionPeriod.getIsDownload());
+        DatabaseService.updateQuestionPeriodTable(questionPeriod.getCourse_standard_id(),questionPeriod.getId(),questionPeriod.getTitle(),questionPeriod.getIsDownload());
 
     }
     @Override
