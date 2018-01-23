@@ -60,7 +60,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
 
 
     private FrameLayout fl_no_data, frameLayout_content;
-    ArrayList<Book> mybooks = null;//教材列表
+    ArrayList<Book> mybooks = new ArrayList<>();//教材列表
     Book thisBook = null;//当前选中的教材项
     CourseStandardTree courseStandardTree = null;//当前选中的课标树
     ArrayList<CourseStandardTree> courseStandardTreeArrayList = new ArrayList<>();//课标树、数据源
@@ -108,9 +108,9 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         this.mContext = this;
 
         initView();
+        initPop();
         initData();
         setGridView();
-        initPop();
         initListener();
     }
 
@@ -252,7 +252,10 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             thisBook = mybooks.get(0);
             // courseStandardTreeArrayList = DatabaseService.findCourseStandardTreeList(thisBook.getId());
 
+
             //列表目录
+            updatePopUI(0);
+            booklistViewAdapter.updateBookList(mybooks);
             presenter.getFiles(-1, thisBook.getId(), 0);
         }
 
@@ -286,14 +289,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
-                course_id = mybooks.get(position).getCourse_id();
-                book_id = mybooks.get(position).getId();
-                book_name = mybooks.get(position).getName();
-                text_book_name.setText(book_name);
-                Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
-                if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
-                    presenter.getFiles(-1,thisBook.getId(),0);
-                }
+                updatePopUI(position);
             }
         });
         popupWindow = new PopupWindow(view, getScreenWidth(this) / 4, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -313,7 +309,17 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         });
         popX = getScreenWidth(this) / 8;
     }
-
+    private void updatePopUI(int position){
+        course_id = mybooks.get(position).getCourse_id();
+        book_id = mybooks.get(position).getId();
+        book_name = mybooks.get(position).getName();
+        text_book_name.setText(book_name);
+        Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
+        if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
+            thisBook = mybooks.get(position);
+            presenter.getFiles(-1,thisBook.getId(),0);
+        }
+    }
     @Override
     public void fillData(int position, List<CourseStandardTree> list) {
         adapter.setNewData(list);
