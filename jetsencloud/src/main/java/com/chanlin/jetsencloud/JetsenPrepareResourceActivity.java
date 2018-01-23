@@ -52,7 +52,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
     private ListView resourse_listview;
 
     private FrameLayout fl_no_data, frameLayout_content;
-    ArrayList<Book> mybooks = null;//教材列表
+    ArrayList<Book> mybooks =  new ArrayList<>();//教材列表
     Book thisBook = null;//当前选中的教材项
 
     private RecyclerView fileRv;
@@ -88,9 +88,10 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         mContext = this;
 
         initView();
+        initPop();
         initData();
         setlistview();
-        initPop();
+
     }
 
     private void initView() {
@@ -129,6 +130,8 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
             //courseStandardTreeArrayList = DatabaseService.findCourseStandardTreeList(thisBook.getId());
 
             //列表目录
+            updatePopUI(0);
+            booklistViewAdapter.updateBookList(mybooks);
             presenter.getFiles(-1, thisBook.getId(), 0);
         }
     }
@@ -160,14 +163,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
-                course_id = mybooks.get(position).getCourse_id();
-                book_id = mybooks.get(position).getId();
-                book_name = mybooks.get(position).getName();
-                text_book_name.setText(book_name);
-                Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
-                if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
-                    presenter.getFiles(-1,thisBook.getId(),0);
-                }
+                updatePopUI(position);
             }
         });
         popupWindow = new PopupWindow(view, getScreenWidth(this) / 4, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -186,7 +182,17 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         });
         popX = getScreenWidth(this) / 8;
     }
-
+    private void updatePopUI(int position){
+        course_id = mybooks.get(position).getCourse_id();
+        book_id = mybooks.get(position).getId();
+        book_name = mybooks.get(position).getName();
+        text_book_name.setText(book_name);
+        Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
+        if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
+            thisBook = mybooks.get(position);
+            presenter.getFiles(-1,thisBook.getId(),0);
+        }
+    }
     private void initListener() {
         fileRv.addOnItemTouchListener(new OnItemClickListener() {
             @Override
