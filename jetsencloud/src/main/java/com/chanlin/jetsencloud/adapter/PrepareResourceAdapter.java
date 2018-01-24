@@ -148,7 +148,7 @@ public class PrepareResourceAdapter extends BaseAdapter{
                 imgView.setImageResource(R.mipmap.img_type_flash);
                 break;
             default:
-                imgView.setImageResource(R.mipmap.img_type_word);
+                imgView.setImageResource(R.mipmap.img_type_unknown);
                 break;
         }
 
