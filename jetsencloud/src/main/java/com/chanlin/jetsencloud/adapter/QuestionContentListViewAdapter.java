@@ -1,16 +1,21 @@
 package com.chanlin.jetsencloud.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,6 +28,7 @@ import com.chanlin.jetsencloud.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -104,6 +110,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
             hodler.iv_parse = (ImageView) view.findViewById(R.id.iv_parse);
             hodler.tv_parse_title = (TextView) view.findViewById(R.id.tv_parse_title);
             hodler.iv_parse_title = (ImageView) view.findViewById(R.id.iv_parse_title);
+            hodler.ll_question_item = (LinearLayout) view.findViewById(R.id.ll_question_item);
             //hodler.file_title
             hodler.down = (ImageView) view.findViewById(R.id.type_icon);
             view.setTag(hodler);
@@ -235,8 +242,10 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
 
         if (detail.ischecked()){
             hodler.down.setImageResource(R.mipmap.period_check_on);
+            hodler.ll_question_item.setBackgroundResource(R.color.background_gray);
         }else{
             hodler.down.setImageResource(R.mipmap.period_check_off);
+            hodler.ll_question_item.setBackgroundResource(R.color.white);
         }
         return view;
     }
@@ -245,6 +254,7 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
         TextView tv_file_title, tv_pid_title, tv_parse, tv_parse_title;
         ImageView iv_file_title, iv_pid_title, iv_parse, iv_parse_title;
         ImageView down;
+        LinearLayout ll_question_item;
     }
 
     private QuestionContent pullJson(JSONObject jsonObject) throws JSONException{
@@ -272,10 +282,20 @@ public class QuestionContentListViewAdapter extends BaseAdapter {
         @Override
         public Drawable getDrawable(String source) {
             Drawable drawable = null;
-            drawable = Drawable.createFromPath(source);  // Or fetch it from the URL
+          //  URL url;
+            try {
+            //    url = new URL(source);
+                //Android 4.4 以后这步需要放在子线程中去操作
+                //drawable = Drawable.createFromStream(url.openStream(), "png"); // 获取网路图片
+                String c = source.substring(22);
+                drawable = new BitmapDrawable(FileUtils.stringtoBitmap(c));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
             // Important
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable
-                    .getIntrinsicHeight());
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth() * 5, drawable
+                    .getIntrinsicHeight() * 5);
             return drawable;
         }
     };

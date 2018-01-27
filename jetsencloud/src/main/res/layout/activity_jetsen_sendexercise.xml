@@ -131,7 +131,9 @@
                 <ListView
                     android:id="@+id/lv_question_detial_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:divider="@color/motion_detail_position_text"
+                    android:dividerHeight="1px"/>
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
