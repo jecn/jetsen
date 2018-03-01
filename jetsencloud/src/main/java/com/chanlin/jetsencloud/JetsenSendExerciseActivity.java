@@ -346,7 +346,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 bundle.putInt("course_standard_id", courseStandardTree.getId());
                 bundle.putSerializable("questionList", addList);//添加要返回给页面1的数据
                 intent.putExtras(bundle);
-                finish();
+                //finish();
             }
 
         }else if(id == R.id.tv_book_name){ // popupWindow弹框

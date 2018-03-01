@@ -93,6 +93,7 @@ public class ResourceAdapter extends BaseAdapter{
                     //已下载
                     tree.setFile_url("");
                     hodler.down.setImageResource(R.mipmap.img_download);
+                    DatabaseService.deleteResourceTree(tree.getUuid());
                 }else{
 //                    hodler.down.setImageResource(R.mipmap.img_download);
                     //未下载，调用下载，并更新数据库

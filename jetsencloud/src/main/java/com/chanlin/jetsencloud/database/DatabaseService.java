@@ -8,8 +8,10 @@ import com.chanlin.jetsencloud.entity.CourseStandardTree;
 import com.chanlin.jetsencloud.entity.QuestionPeriod;
 import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
 import com.chanlin.jetsencloud.entity.ResourceTree;
+import com.chanlin.jetsencloud.util.FileUtils;
 import com.chanlin.jetsencloud.util.LogUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -573,4 +575,35 @@ public class DatabaseService {
         return bookList;
     }
 
+    /**
+     * 删除资源 文件数据和数据库数据
+     */
+    public static void deleteResourceTree(String uuid){
+        String where_cause = DatabaseObject.ResourceTreeTable.resource_uuid
+                + " =? ";
+        String[] where_args = new String[]{String.valueOf(uuid)};
+        Cursor cursor = null;
+        try{
+            cursor = DatabaseUtils.getRecordsFromTable(DatabaseObject.ResourceTree,
+                    null,DatabaseObject.ResourceTreeTable.projection, where_cause,where_args,null);
+            while (cursor.moveToNext()){
+                ResourceTree resourceTree = new ResourceTree();
+                resourceTree.setFile_url(cursor.getString(6));
+
+                boolean a = FileUtils.deleteFile(new File(cursor.getString(6)));
+                LogUtil.showInfo("resource",cursor.getString(6));
+                LogUtil.showInfo("delete resource",String.valueOf(a));
+            }
+            int count  = DatabaseUtils.deleteRecordFromTable(DatabaseObject.ResourceTree,null,where_cause,where_args);
+            LogUtil.showInfo("delete count",String.valueOf(count));
+        }catch (Exception e){
+            e.printStackTrace();
+            LogUtil.showInfo("database","deleteResourceTree exception:");
+        }finally {
+            LogUtil.showInfo("database","deleteResourceTree finally:");
+            if(cursor != null ) cursor.close();
+        }
+
+
+    }
 }

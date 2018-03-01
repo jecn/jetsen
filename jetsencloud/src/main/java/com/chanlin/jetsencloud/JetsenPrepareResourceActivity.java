@@ -149,7 +149,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable("resourceTree", resourceTreeList.get(position));
                 intent.putExtras(mBundle);
-                finish();
+               // finish();
             }
         });
     }
