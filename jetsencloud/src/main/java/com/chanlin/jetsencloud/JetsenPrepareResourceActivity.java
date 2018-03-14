@@ -35,6 +35,8 @@ import com.chanlin.jetsencloud.entity.ResourceTree;
 import com.chanlin.jetsencloud.expandable.ExpandView;
 import com.chanlin.jetsencloud.expandable.ExpandablePresenter;
 import com.chanlin.jetsencloud.expandable.FileAdapter;
+import com.chanlin.jetsencloud.util.CacheActivity;
+import com.chanlin.jetsencloud.util.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,12 +88,12 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
         setContentView(R.layout.activity_jetsen_prepareresource);
         mContext = this;
+        CacheActivity.addActivity(this);
 
         initView();
         initPop();
         initData();
         setlistview();
-
     }
 
     private void initView() {
@@ -144,12 +146,18 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         resourse_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                Bundle mBundle = new Bundle();
-                mBundle.putSerializable("resourceTree", resourceTreeList.get(position));
-                intent.putExtras(mBundle);
-                finish();
+//                Intent intent = new Intent();
+//                setResult(RESULT_OK, intent);
+//                Bundle mBundle = new Bundle();
+//                mBundle.putSerializable("resourceTree", resourceTreeList.get(position));
+//                intent.putExtras(mBundle);
+//                finish();
+                // 发送习题广播
+                Intent intent = new Intent(Constant.SEND_PREPARE_RESOURCE);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("resourceTree", resourceTreeList.get(position));
+                intent.putExtras(bundle);
+                sendBroadcast(intent);
             }
         });
     }
@@ -316,5 +324,11 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
             private TextView period_name;
             private ImageView imgcheck;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CacheActivity.removeActivity(this);
     }
 }

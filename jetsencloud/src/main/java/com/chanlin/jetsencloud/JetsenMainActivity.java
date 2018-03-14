@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.chanlin.jetsencloud.adapter.GridViewAdapter;
 import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
+import com.chanlin.jetsencloud.util.CacheActivity;
 import com.chanlin.jetsencloud.util.Constant;
 import com.chanlin.jetsencloud.util.LogUtil;
 import com.chanlin.jetsencloud.util.StringUtils;
@@ -131,7 +134,7 @@ public class JetsenMainActivity extends AppCompatActivity {
                 //点击后跳转 传递值到另外一个页面
                 Intent it  = new Intent(JetsenMainActivity.this,JetsenSendExerciseActivity.class);
                 it.putExtra("courceId", 1 + "");
-                JetsenMainActivity.this.startActivityForResult(it, 1001);
+                JetsenMainActivity.this.startActivity(it);
             }
         });
         tv_prepare_resource = (TextView) findViewById(R.id.tv_prepare_resource);
@@ -141,7 +144,7 @@ public class JetsenMainActivity extends AppCompatActivity {
                 //点击后跳转 传递值到另外一个页面
                 Intent it  = new Intent(JetsenMainActivity.this,JetsenPrepareResourceActivity.class);
                 it.putExtra("courceId", 1 + "");
-                JetsenMainActivity.this.startActivityForResult(it, 1002);
+                JetsenMainActivity.this.startActivity(it);
             }
         });
     }
@@ -192,6 +195,17 @@ public class JetsenMainActivity extends AppCompatActivity {
             String string = bundle.getSerializable("resourceTree").toString();
             Toast.makeText(this, "发送..." + "  " +string, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            CacheActivity.finishActivity();
+            finish();
+            Log.e("onKeyDown", "onKeyDown");
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

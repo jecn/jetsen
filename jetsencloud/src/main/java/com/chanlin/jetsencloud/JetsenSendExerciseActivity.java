@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
 import com.chanlin.jetsencloud.expandable.ExpandView;
 import com.chanlin.jetsencloud.expandable.ExpandablePresenter;
 import com.chanlin.jetsencloud.expandable.FileAdapter;
+import com.chanlin.jetsencloud.util.CacheActivity;
+import com.chanlin.jetsencloud.util.Constant;
 import com.chanlin.jetsencloud.util.FileUtils;
 import com.chanlin.jetsencloud.util.StringUtils;
 import com.chanlin.jetsencloud.util.ToastUtils;
@@ -50,10 +53,16 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/1/12.
  */
-public class JetsenSendExerciseActivity extends FragmentActivity implements ExpandView, View.OnClickListener {
+public class JetsenSendExerciseActivity extends Activity implements ExpandView, View.OnClickListener {
 
     private TextView send_exercise;
     private RelativeLayout mRLBack;
+
+    // 题目类型（选择、判断、填空、主观）
+    private RelativeLayout rl_types1, rl_types2, rl_types3, rl_types4;
+    private TextView tv_types1, tv_types2, tv_types3, tv_types4;
+    private ImageView view_types1, view_types2, view_types3, view_types4;
+    private ArrayList<QuestionPeriodDetail> questionContentList2 = new ArrayList<>();
 
     private Context mContext;
     private String courseId;
@@ -106,6 +115,7 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
         setContentView(R.layout.activity_jetsen_sendexercise);
         this.mContext = this;
+        CacheActivity.addActivity(this);
 
         initView();
         initPop();
@@ -136,15 +146,30 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         img_booklist = (ImageView) findViewById(R.id.img_booklist);
         ll_sendexercise = (LinearLayout) findViewById(R.id.ll_sendexercise);
 
+        // 题目类型（选择、判断、填空、主观）
+        rl_types1 = (RelativeLayout) findViewById(R.id.rl_types1);
+        rl_types2 = (RelativeLayout) findViewById(R.id.rl_types2);
+        rl_types3 = (RelativeLayout) findViewById(R.id.rl_types3);
+        rl_types4 = (RelativeLayout) findViewById(R.id.rl_types4);
+        rl_types1.setOnClickListener(this);
+        rl_types2.setOnClickListener(this);
+        rl_types3.setOnClickListener(this);
+        rl_types4.setOnClickListener(this);
 
+        tv_types1 = (TextView) findViewById(R.id.tv_types1);
+        tv_types2 = (TextView) findViewById(R.id.tv_types2);
+        tv_types3 = (TextView) findViewById(R.id.tv_types3);
+        tv_types4 = (TextView) findViewById(R.id.tv_types4);
+        view_types1 = (ImageView) findViewById(R.id.view_types1);
+        view_types2 = (ImageView) findViewById(R.id.view_types2);
+        view_types3 = (ImageView) findViewById(R.id.view_types3);
+        view_types4 = (ImageView) findViewById(R.id.view_types4);
     }
 
     private void initListener() {
         fileRv.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-                //清空选中的题目
-                addList.clear();
                 CourseStandardTree entity = (CourseStandardTree) adapter.getItem(position);
                 if (entity.isExpand) {
                     adapter.collapse(position);
@@ -160,15 +185,18 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 //resourceTreeList = DatabaseService.findResourceTreeList(entity.getId());
                 questionPeriodList = DatabaseService.findQuestionPeriodList(entity.getId());
 
-                number = 0;
-                addType = "";
+                //清空选中的题目
+                addList.clear();
                 courseStandardTree = entity;
                 //刷新课时数据
                 mAdapter.updateAdapter(questionPeriodList);
                 if (questionPeriodList != null && questionPeriodList.size() > 0) {
                     ll_question_view.setVisibility(View.VISIBLE);
                     questionContentList = DatabaseService.findQuestionPeriodDetailListWhereUrlNotNull(questionPeriodList.get(0).getId());
-                    listViewAdapter.updateList(questionContentList);
+                    int type = getType(questionContentList); // 获取默认初始题型
+                    setTypeBackColor(type); // 设置题型背景色
+                    getQuestionListTypeDate(type, questionContentList); // 过滤题目列表
+                    listViewAdapter.updateList(questionContentList2);
                 }else{
                     ll_question_view.setVisibility(View.INVISIBLE);
                 }
@@ -183,10 +211,11 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                 questionContentList = DatabaseService.findQuestionPeriodDetailListWhereUrlNotNull(questionPeriod.getId());
                 //清空选中 的题目
                 addList.clear();
-                number = 0;
-                addType = "";
                 mAdapter.updateAdapter(position, questionPeriodList);
-                listViewAdapter.updateList(questionContentList);
+                int type = getType(questionContentList);
+                setTypeBackColor(type); // 设置题型背景色
+                getQuestionListTypeDate(type, questionContentList); // 过滤题目列表
+                listViewAdapter.updateList(questionContentList2);
             }
         });
 
@@ -194,48 +223,54 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //点击某个listview的item时 选中或者取消选中
-                QuestionPeriodDetail detail = questionContentList.get(position);
+                QuestionPeriodDetail detail = questionContentList2.get(position);
                 //读取文件并解析
                 if (detail.getUrl() != null){
-                    String jsonStr = FileUtils.getJsonFile(detail.getUrl());
-                    try {
-                        JSONObject json = new JSONObject(jsonStr);
-                        int thisQuestionType = json.getInt("type");
-                        if (StringUtils.isEmpty(addType)){
-                            addType = String.valueOf(thisQuestionType);
-                            number++;
-                            detail.setIschecked(true);
-                            addList.add(detail);
-                            listViewAdapter.notifyDataSetChanged();
-                        }else if (addType.equals(String.valueOf(thisQuestionType))){
-                            if (detail.ischecked()){
-                                detail.setIschecked(false);
-                                addList.remove(detail);
-                                number--;
-                                if (number == 0){
-                                    addType = "";
-                                }
-                            }else {
-                                detail.setIschecked(true);
-                                addList.add(detail);
-                                number++;
-                            }
-                            listViewAdapter.notifyDataSetChanged();
-                            return;
-                        }else {
-                            Toast.makeText(mContext, "请选择相同类型的题目！", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        ToastUtils.shortToast(mContext,R.string.no_question_file);
-                        return;
+//                    String jsonStr = FileUtils.getJsonFile(detail.getUrl());
+//                    try {
+//                        JSONObject json = new JSONObject(jsonStr);
+//                        int thisQuestionType = json.getInt("type");
+//                        if (StringUtils.isEmpty(addType)){
+//                            addType = String.valueOf(thisQuestionType);
+//                            number++;
+//                            detail.setIschecked(true);
+//                            addList.add(detail);
+//                            listViewAdapter.notifyDataSetChanged();
+//                        }else if (addType.equals(String.valueOf(thisQuestionType))){
+//                            if (detail.ischecked()){
+//                                detail.setIschecked(false);
+//                                addList.remove(detail);
+//                                number--;
+//                                if (number == 0){
+//                                    addType = "";
+//                                }
+//                            }else {
+//                                detail.setIschecked(true);
+//                                addList.add(detail);
+//                                number++;
+//                            }
+//                            listViewAdapter.notifyDataSetChanged();
+//                            return;
+//                        }else {
+//                            Toast.makeText(mContext, "请选择相同类型的题目！", Toast.LENGTH_SHORT).show();
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        ToastUtils.shortToast(mContext,R.string.no_question_file);
+//                        return;
+//                    }
+
+                    if (detail.ischecked()){
+                        detail.setIschecked(false);
+                        addList.remove(detail);
+                    }else {
+                        detail.setIschecked(true);
+                        addList.add(detail);
                     }
-
-
+                    listViewAdapter.notifyDataSetChanged();
                 }else {
                     ToastUtils.shortToast(mContext,R.string.no_question_file);
                 }
-
             }
         });
     }
@@ -252,18 +287,17 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
             thisBook = mybooks.get(0);
             // courseStandardTreeArrayList = DatabaseService.findCourseStandardTreeList(thisBook.getId());
 
-
             //列表目录
             updatePopUI(0);
             booklistViewAdapter.updateBookList(mybooks);
             presenter.getFiles(-1, thisBook.getId(), 0);
         }
-
     }
 
     private void setGridView() {
         //右侧内容
         ll_question_view = (LinearLayout) findViewById(R.id.ll_question_view);
+        ll_question_view.setVisibility(View.INVISIBLE);
         gv_question_period_list = (RecyclerView) findViewById(R.id.gv_question_period_list);
         //设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -333,23 +367,32 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         int id = v.getId();
         if (id == R.id.title_back) {
             finish();
-        }else if(id == R.id.sendexercise) {
+        }
+        if(id == R.id.sendexercise) {
             //判断是否选择了题目,没选择则提示选择
             if (addList == null || addList.size() < 1) {
                 //没选中题目
                 ToastUtils.shortToast(mContext, R.string.no_question_list);
 //                finish();
             } else {
-                Intent intent = getIntent();
-                setResult(Activity.RESULT_OK, intent);//返回页面1
-                Bundle bundle = intent.getExtras();
+//                Intent intent = getIntent();
+//                setResult(Activity.RESULT_OK, intent);//返回页面1
+//                Bundle bundle = intent.getExtras();
+//                bundle.putInt("course_standard_id", courseStandardTree.getId());
+//                bundle.putSerializable("questionList", addList);//添加要返回给页面1的数据
+//                intent.putExtras(bundle);
+//                finish();
+                // 发送习题广播
+                Intent intent = new Intent(Constant.SEND_EXERCISES);
+                Bundle bundle = new Bundle();
                 bundle.putInt("course_standard_id", courseStandardTree.getId());
                 bundle.putSerializable("questionList", addList);//添加要返回给页面1的数据
                 intent.putExtras(bundle);
-                finish();
+                sendBroadcast(intent);
             }
 
-        }else if(id == R.id.tv_book_name){ // popupWindow弹框
+        }
+        if(id == R.id.tv_book_name){ // popupWindow弹框
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
@@ -363,6 +406,46 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
                     getWindow().setAttributes(lp);
                 }
         }
+        if (id == R.id.rl_types1){
+            //清空选中的题目
+            addList.clear();
+            for (int i = 0; i < questionContentList2.size(); i++){
+                questionContentList2.get(i).setIschecked(false);
+            }
+            setTypeBackColor(1); // 设置题型背景色
+            getQuestionListTypeDate(1, questionContentList); // 过滤题目列表
+            listViewAdapter.updateList(questionContentList2);
+        }
+        if (id == R.id.rl_types2){
+            //清空选中的题目
+            addList.clear();
+            for (int i = 0; i < questionContentList2.size(); i++){
+                questionContentList2.get(i).setIschecked(false);
+            }
+            setTypeBackColor(2);
+            getQuestionListTypeDate(2, questionContentList); // 过滤题目列表
+            listViewAdapter.updateList(questionContentList2);
+        }
+        if (id == R.id.rl_types3){
+            //清空选中的题目
+            addList.clear();
+            for (int i = 0; i < questionContentList2.size(); i++){
+                questionContentList2.get(i).setIschecked(false);
+            }
+            setTypeBackColor(3);
+            getQuestionListTypeDate(3, questionContentList); // 过滤题目列表
+            listViewAdapter.updateList(questionContentList2);
+        }
+        if (id == R.id.rl_types4){
+            //清空选中的题目
+            addList.clear();
+            for (int i = 0; i < questionContentList2.size(); i++){
+                questionContentList2.get(i).setIschecked(false);
+            }
+            setTypeBackColor(4);
+            getQuestionListTypeDate(4, questionContentList); // 过滤题目列表
+            listViewAdapter.updateList(questionContentList2);
+        }
     }
 
     /**
@@ -372,4 +455,94 @@ public class JetsenSendExerciseActivity extends FragmentActivity implements Expa
         return context.getResources().getDisplayMetrics().widthPixels;
     }
 
+    // 题目初始选中类型
+    private int getType(ArrayList<QuestionPeriodDetail> questionContentList) {
+        int mintype = 5;
+        for (int i = 0; i < questionContentList.size(); i++) {
+            QuestionPeriodDetail detail = questionContentList.get(i);
+            if (detail.getUrl() != null) {
+                String jsonStr = FileUtils.getJsonFile(detail.getUrl());
+                try {
+                    JSONObject json = new JSONObject(jsonStr);
+                    int type = json.getInt("type");
+                    if (mintype > type){
+                        mintype = type;
+                    }
+                } catch (JSONException e) {
+
+                }
+            }
+        }
+        return mintype;
+    }
+
+    // 过滤题目列表
+    private void getQuestionListTypeDate(int type, ArrayList<QuestionPeriodDetail> questionContentList) {
+        questionContentList2.clear();
+        for (int i = 0; i < questionContentList.size(); i++) {
+            QuestionPeriodDetail detail = questionContentList.get(i);
+            if (detail.getUrl() != null) {
+                String jsonStr = FileUtils.getJsonFile(detail.getUrl());
+                try {
+                    JSONObject json = new JSONObject(jsonStr);
+                    int types = json.getInt("type");
+                    if (type == types || (type == 4 && types == 5) || (type == 5 && types == 4)){
+                        questionContentList2.add(questionContentList.get(i));
+                    }
+                } catch (JSONException e) {
+
+                }
+            }
+        }
+    }
+
+    // 设置题型背景色
+    private void setTypeBackColor(int i) {
+        if (i == 1){
+            tv_types1.setTextColor(mContext.getResources().getColor(R.color.colorTitle));
+            tv_types2.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types3.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types4.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            view_types1.setVisibility(View.VISIBLE);
+            view_types2.setVisibility(View.INVISIBLE);
+            view_types3.setVisibility(View.INVISIBLE);
+            view_types4.setVisibility(View.INVISIBLE);
+        }
+        if (i == 2){
+            tv_types1.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types2.setTextColor(mContext.getResources().getColor(R.color.colorTitle));
+            tv_types3.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types4.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            view_types1.setVisibility(View.INVISIBLE);
+            view_types2.setVisibility(View.VISIBLE);
+            view_types3.setVisibility(View.INVISIBLE);
+            view_types4.setVisibility(View.INVISIBLE);
+        }
+        if (i == 3){
+            tv_types1.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types2.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types3.setTextColor(mContext.getResources().getColor(R.color.colorTitle));
+            tv_types4.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            view_types1.setVisibility(View.INVISIBLE);
+            view_types2.setVisibility(View.INVISIBLE);
+            view_types3.setVisibility(View.VISIBLE);
+            view_types4.setVisibility(View.INVISIBLE);
+        }
+        if (i == 4){
+            tv_types1.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types2.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types3.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
+            tv_types4.setTextColor(mContext.getResources().getColor(R.color.colorTitle));
+            view_types1.setVisibility(View.INVISIBLE);
+            view_types2.setVisibility(View.INVISIBLE);
+            view_types3.setVisibility(View.INVISIBLE);
+            view_types4.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CacheActivity.removeActivity(this);
+    }
 }

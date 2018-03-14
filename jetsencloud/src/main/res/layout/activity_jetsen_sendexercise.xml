@@ -121,7 +121,122 @@
                     android:id="@+id/gv_question_period_list"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:scrollbars="none"/>
+                    android:scrollbars="none" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/motion_detail_position_text"></View>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_types1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_types1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:text="选择题"
+                            android:textColor="@color/motion_detail_position_text"
+                            android:textSize="@dimen/motion_position_text_size" />
+
+                        <ImageView
+                            android:id="@+id/view_types1"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/tab_selected_pressed_holo"
+                            android:visibility="invisible"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_types2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_types2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:text="判断题"
+                            android:textColor="@color/motion_detail_position_text"
+                            android:textSize="@dimen/motion_position_text_size" />
+
+                        <ImageView
+                            android:id="@+id/view_types2"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/tab_selected_pressed_holo"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_types3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_types3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:text="填空题"
+                            android:textColor="@color/motion_detail_position_text"
+                            android:textSize="@dimen/motion_position_text_size" />
+
+                        <ImageView
+                            android:id="@+id/view_types3"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/tab_selected_pressed_holo"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_types4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_types4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:text="主观题"
+                            android:textColor="@color/motion_detail_position_text"
+                            android:textSize="@dimen/motion_position_text_size" />
+
+                        <ImageView
+                            android:id="@+id/view_types4"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/tab_selected_pressed_holo"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -133,7 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@color/motion_detail_position_text"
-                    android:dividerHeight="1px"/>
+                    android:dividerHeight="1px" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

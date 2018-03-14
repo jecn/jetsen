@@ -40,4 +40,8 @@ public class Constant {
 
     public static final String SEX = "1";//性别 0:女，1:男
 
+    // 发送广播
+    public static final String SEND_EXERCISES = "send_exercise";
+    public static final String  SEND_PREPARE_RESOURCE= "send_prepare_resource";
+
 }

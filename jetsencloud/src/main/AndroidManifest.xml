@@ -13,16 +13,20 @@
         android:supportsRtl="true">
         <activity
             android:name=".JetsenMainActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".JetsenResourceActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".JetsenSendExerciseActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".JetsenPrepareResourceActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"/>
 
         <provider
             android:name=".database.DatabaseProvider"
