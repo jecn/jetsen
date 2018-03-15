@@ -94,6 +94,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         initPop();
         initData();
         setlistview();
+
     }
 
     private void initView() {
@@ -158,6 +159,9 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
                 bundle.putSerializable("resourceTree", resourceTreeList.get(position));
                 intent.putExtras(bundle);
                 sendBroadcast(intent);
+
+
+               // finish();
             }
         });
     }

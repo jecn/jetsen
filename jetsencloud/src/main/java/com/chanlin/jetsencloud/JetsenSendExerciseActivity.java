@@ -388,7 +388,9 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 bundle.putInt("course_standard_id", courseStandardTree.getId());
                 bundle.putSerializable("questionList", addList);//添加要返回给页面1的数据
                 intent.putExtras(bundle);
+
                 sendBroadcast(intent);
+                //finish();
             }
 
         }
