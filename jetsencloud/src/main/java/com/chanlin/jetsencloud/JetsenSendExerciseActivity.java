@@ -103,7 +103,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
     private String addType;//选中题目的类型，一次只能选一种类型的题目
     private LinearLayout ll_question_view;//右侧习题显示的view
     private RecyclerView gv_question_period_list;//课时 列表
-//    private QuestionPeriodGridViewAdapter gridViewAdapter;
+    //    private QuestionPeriodGridViewAdapter gridViewAdapter;
     private RecyclerViewAdapter mAdapter;
     private ListView lv_question_detial_list;//问题列表
     private QuestionContentListViewAdapter listViewAdapter;
@@ -185,8 +185,8 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 //resourceTreeList = DatabaseService.findResourceTreeList(entity.getId());
                 questionPeriodList = DatabaseService.findQuestionPeriodList(entity.getId());
 
-                //清空选中的题目
-                addList.clear();
+                addList.clear(); //清空选中的题目
+                number = 0;
                 courseStandardTree = entity;
                 //刷新课时数据
                 mAdapter.updateAdapter(questionPeriodList);
@@ -197,7 +197,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                     setTypeBackColor(type); // 设置题型背景色
                     getQuestionListTypeDate(type, questionContentList); // 过滤题目列表
                     listViewAdapter.updateList(questionContentList2);
-                }else{
+                } else {
                     ll_question_view.setVisibility(View.INVISIBLE);
                 }
             }
@@ -209,8 +209,8 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 QuestionPeriod questionPeriod = questionPeriodList.get(position);
                 //数据库查询 已经下载了 的 问题详情
                 questionContentList = DatabaseService.findQuestionPeriodDetailListWhereUrlNotNull(questionPeriod.getId());
-                //清空选中 的题目
-                addList.clear();
+                addList.clear(); //清空选中的题目
+                number = 0;
                 mAdapter.updateAdapter(position, questionPeriodList);
                 int type = getType(questionContentList);
                 setTypeBackColor(type); // 设置题型背景色
@@ -225,7 +225,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 //点击某个listview的item时 选中或者取消选中
                 QuestionPeriodDetail detail = questionContentList2.get(position);
                 //读取文件并解析
-                if (detail.getUrl() != null){
+                if (detail.getUrl() != null) {
 //                    String jsonStr = FileUtils.getJsonFile(detail.getUrl());
 //                    try {
 //                        JSONObject json = new JSONObject(jsonStr);
@@ -260,16 +260,20 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
 //                        return;
 //                    }
 
-                    if (detail.ischecked()){
+                    if (detail.ischecked()) {
                         detail.setIschecked(false);
                         addList.remove(detail);
-                    }else {
+                        number--;
+                    } else if (number < 10){
                         detail.setIschecked(true);
                         addList.add(detail);
+                        number++;
+                    } else {
+                        ToastUtils.shortToast(mContext, "题目数量超过限制！");
                     }
                     listViewAdapter.notifyDataSetChanged();
-                }else {
-                    ToastUtils.shortToast(mContext,R.string.no_question_file);
+                } else {
+                    ToastUtils.shortToast(mContext, R.string.no_question_file);
                 }
             }
         });
@@ -343,17 +347,19 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
         });
         popX = getScreenWidth(this) / 8;
     }
-    private void updatePopUI(int position){
+
+    private void updatePopUI(int position) {
         course_id = mybooks.get(position).getCourse_id();
         book_id = mybooks.get(position).getId();
         book_name = mybooks.get(position).getName();
         text_book_name.setText(book_name);
         Log.i("onActivityResult", " course_id=" + course_id + " book_id=" + book_id + " book_name" + book_name);
-        if (thisBook != mybooks.get(position)){//如果前面的book不是选中的则刷新列表
+        if (thisBook != mybooks.get(position)) {//如果前面的book不是选中的则刷新列表
             thisBook = mybooks.get(position);
-            presenter.getFiles(-1,thisBook.getId(),0);
+            presenter.getFiles(-1, thisBook.getId(), 0);
         }
     }
+
     @Override
     public void fillData(int position, List<CourseStandardTree> list) {
         adapter.setNewData(list);
@@ -365,10 +371,9 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.title_back) {
+        if (id == R.id.title_back) { // 返回
             finish();
-        }
-        if(id == R.id.sendexercise) {
+        } else if (id == R.id.sendexercise) { // 发送
             //判断是否选择了题目,没选择则提示选择
             if (addList == null || addList.size() < 1) {
                 //没选中题目
@@ -393,55 +398,50 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 //finish();
             }
 
-        }
-        if(id == R.id.tv_book_name){ // popupWindow弹框
-                if (popupWindow.isShowing()) {
-                    popupWindow.dismiss();
-                } else {
+        } else if (id == R.id.tv_book_name) { // popupWindow弹框
+            if (popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            } else {
 //                    ll_sendexercise.setBackgroundResource(R.color.translucence_gray);
-                    img_booklist.setImageResource(R.mipmap.img_booklist_bottom);
-                    popupWindow.showAsDropDown(relative_booklist, popX, 5);
+                img_booklist.setImageResource(R.mipmap.img_booklist_bottom);
+                popupWindow.showAsDropDown(relative_booklist, popX, 5);
 //                    popupWindow.showAtLocation(view, Gravity.CENTER_HORIZONTAL, 0, 0);
-                    // 设置背景颜色变暗
-                    WindowManager.LayoutParams lp = getWindow().getAttributes();
-                    lp.alpha = 0.7f;
-                    getWindow().setAttributes(lp);
-                }
-        }
-        if (id == R.id.rl_types1){
-            //清空选中的题目
-            addList.clear();
-            for (int i = 0; i < questionContentList2.size(); i++){
+                // 设置背景颜色变暗
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 0.7f;
+                getWindow().setAttributes(lp);
+            }
+        } else if (id == R.id.rl_types1) { // 选择题
+            addList.clear(); //清空选中的题目
+            number = 0;
+            for (int i = 0; i < questionContentList2.size(); i++) {
                 questionContentList2.get(i).setIschecked(false);
             }
             setTypeBackColor(1); // 设置题型背景色
             getQuestionListTypeDate(1, questionContentList); // 过滤题目列表
             listViewAdapter.updateList(questionContentList2);
-        }
-        if (id == R.id.rl_types2){
-            //清空选中的题目
-            addList.clear();
-            for (int i = 0; i < questionContentList2.size(); i++){
+        } else if (id == R.id.rl_types2) { // 判断题
+            addList.clear(); //清空选中的题目
+            number = 0;
+            for (int i = 0; i < questionContentList2.size(); i++) {
                 questionContentList2.get(i).setIschecked(false);
             }
             setTypeBackColor(2);
             getQuestionListTypeDate(2, questionContentList); // 过滤题目列表
             listViewAdapter.updateList(questionContentList2);
-        }
-        if (id == R.id.rl_types3){
-            //清空选中的题目
-            addList.clear();
-            for (int i = 0; i < questionContentList2.size(); i++){
+        } else if (id == R.id.rl_types3) { // 填空题
+            addList.clear(); //清空选中的题目
+            number = 0;
+            for (int i = 0; i < questionContentList2.size(); i++) {
                 questionContentList2.get(i).setIschecked(false);
             }
             setTypeBackColor(3);
             getQuestionListTypeDate(3, questionContentList); // 过滤题目列表
             listViewAdapter.updateList(questionContentList2);
-        }
-        if (id == R.id.rl_types4){
-            //清空选中的题目
-            addList.clear();
-            for (int i = 0; i < questionContentList2.size(); i++){
+        } else if (id == R.id.rl_types4) { // 主观题
+            addList.clear(); //清空选中的题目
+            number = 0;
+            for (int i = 0; i < questionContentList2.size(); i++) {
                 questionContentList2.get(i).setIschecked(false);
             }
             setTypeBackColor(4);
@@ -467,7 +467,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 try {
                     JSONObject json = new JSONObject(jsonStr);
                     int type = json.getInt("type");
-                    if (mintype > type){
+                    if (mintype > type) {
                         mintype = type;
                     }
                 } catch (JSONException e) {
@@ -488,7 +488,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 try {
                     JSONObject json = new JSONObject(jsonStr);
                     int types = json.getInt("type");
-                    if (type == types || (type == 4 && types == 5) || (type == 5 && types == 4)){
+                    if (type == types || (type == 4 && types == 5) || (type == 5 && types == 4)) {
                         questionContentList2.add(questionContentList.get(i));
                     }
                 } catch (JSONException e) {
@@ -500,7 +500,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
 
     // 设置题型背景色
     private void setTypeBackColor(int i) {
-        if (i == 1){
+        if (i == 1) {
             tv_types1.setTextColor(mContext.getResources().getColor(R.color.colorTitle));
             tv_types2.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
             tv_types3.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
@@ -510,7 +510,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
             view_types3.setVisibility(View.INVISIBLE);
             view_types4.setVisibility(View.INVISIBLE);
         }
-        if (i == 2){
+        if (i == 2) {
             tv_types1.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
             tv_types2.setTextColor(mContext.getResources().getColor(R.color.colorTitle));
             tv_types3.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
@@ -520,7 +520,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
             view_types3.setVisibility(View.INVISIBLE);
             view_types4.setVisibility(View.INVISIBLE);
         }
-        if (i == 3){
+        if (i == 3) {
             tv_types1.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
             tv_types2.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
             tv_types3.setTextColor(mContext.getResources().getColor(R.color.colorTitle));
@@ -530,7 +530,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
             view_types3.setVisibility(View.VISIBLE);
             view_types4.setVisibility(View.INVISIBLE);
         }
-        if (i == 4){
+        if (i == 4) {
             tv_types1.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
             tv_types2.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
             tv_types3.setTextColor(mContext.getResources().getColor(R.color.motion_detail_position_text));
