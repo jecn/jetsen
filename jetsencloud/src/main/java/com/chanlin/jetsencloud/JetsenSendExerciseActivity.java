@@ -395,6 +395,8 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 intent.putExtras(bundle);
 
                 sendBroadcast(intent);
+                moveTaskToBack(true);
+
                 //finish();
             }
 

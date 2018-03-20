@@ -14,7 +14,7 @@
         <activity
             android:name=".JetsenMainActivity"
             android:screenOrientation="landscape"
-            android:launchMode="singleInstance"/>
+            android:launchMode="singleTop"/>
         <activity
             android:name=".JetsenResourceActivity"
             android:screenOrientation="landscape"
@@ -22,11 +22,13 @@
         <activity
             android:name=".JetsenSendExerciseActivity"
             android:screenOrientation="landscape"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleInstance"
+            />
         <activity
             android:name=".JetsenPrepareResourceActivity"
             android:screenOrientation="landscape"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleInstance"
+            />
 
         <provider
             android:name=".database.DatabaseProvider"

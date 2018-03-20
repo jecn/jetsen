@@ -160,8 +160,10 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
                 intent.putExtras(bundle);
                 sendBroadcast(intent);
 
+                moveTaskToBack(true);
 
-               // finish();
+
+                // finish();
             }
         });
     }

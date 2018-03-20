@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         extras.putString("file", "http://file.kexinedu.net:8004/");
         extras.putString("file_up", "http://fileup.kexinedu.net:8005/");
         String[] ids = new String[]{"1","2","3"};
-        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMTciLCJ1c2VyX2lkIjoxMDIxLCJleHAiOjE1MjA4NDM5NDEsImxvZ2luX3R5cGUiOjF9.aIGjBBHupI5Eej9O6T_2IUkdaG74WpLiTp4QrYko_v4");
+        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMjAiLCJ1c2VyX2lkIjo0NTEwLCJleHAiOjE1MjE3ODk3NzcsImxvZ2luX3R5cGUiOjF9.tDiXl4lnI9zbkVe5U7ow-VttR0oFUToVW9jFX_4WAGE");
         String[] names = new String[]{"语文","数学","英语"};
         extras.putStringArray("course_ids", ids);
         extras.putStringArray("course_names", names);
