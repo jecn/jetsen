@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/bt_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1. 云登录"/>
+
+    <Button
+        android:id="@+id/bt_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2. 关系列表"/>
+    <Button
+        android:id="@+id/bt_three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3. 具体身份登陆"/>
+    <Button
+        android:id="@+id/bt_four"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4. 用户"/>
+    <Button
+        android:id="@+id/bt_five"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5. 进入main"/>
+    
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

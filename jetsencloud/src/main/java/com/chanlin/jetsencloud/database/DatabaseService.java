@@ -606,4 +606,50 @@ public class DatabaseService {
 
 
     }
+    /**
+     * //删除题目,先删课时，再删题目，删本地题目文件
+     * 传入课标树id，删除 课时表中的课标树id相关的数据
+     */
+    public static void deleteQuestionPeriodListAnddetails(int course_standard_id){
+        String where_cause = DatabaseObject.QuestionPeriodTable.question_period_course_standard_id
+                + " =? ";
+        String[] where_args = new String[]{String.valueOf(course_standard_id)};
+        Cursor cursor = null;
+        try{
+            cursor = DatabaseUtils.getRecordsFromTable(DatabaseObject.QuestionPeriod,
+                    null, DatabaseObject.QuestionPeriodTable.projection, where_cause, where_args,null);
+            while (cursor.moveToNext()){
+                QuestionPeriod questionPeriod = new QuestionPeriod();
+                questionPeriod.setCourse_standard_id(cursor.getInt(0));
+                questionPeriod.setId(cursor.getInt(1));
+                int countPeriod = DatabaseUtils.deleteRecordFromTable(DatabaseObject.QuestionPeriod,null,where_cause,where_args);
+                String where_detail_cause = DatabaseObject.QuestionPeriodDetailTable.detail_question_period_id
+                        + " =? ";
+                String[] where_detail_args = new String[]{String.valueOf(course_standard_id)};
+                int countPeriodDetails = DatabaseUtils.deleteRecordFromTable(DatabaseObject.QuestionPeriodDetail,null,where_detail_cause,where_detail_args);
+                LogUtil.showInfo("delete question","countPeriod="+countPeriod + " /t countPeriodDetails="+countPeriodDetails);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            LogUtil.showInfo("database","deleteQuestionPeriodListAnddetails exception:");
+        }finally {
+            LogUtil.showInfo("database","deleteQuestionPeriodListAnddetails finally:");
+            if(cursor != null ) cursor.close();
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

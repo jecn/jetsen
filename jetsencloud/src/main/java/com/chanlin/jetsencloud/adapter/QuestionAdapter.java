@@ -134,8 +134,12 @@ public class QuestionAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isEmpty(isDownload) && "1".equals(isDownload)){
+                    //删除题目,先删课时，再删题目，删本地题目文件
+                    DatabaseService.deleteQuestionPeriodListAnddetails(question.getCourse_standard_id());
+
                     question.setIsDownload("0");
                     hodler.down.setImageResource(R.mipmap.img_download);
+
                 }else {
                     //动态授权
                     if (!JetsenResourceActivity.mIsGrant){

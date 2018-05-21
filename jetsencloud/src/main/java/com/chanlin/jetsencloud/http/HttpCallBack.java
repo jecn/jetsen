@@ -35,9 +35,9 @@ public abstract class HttpCallBack implements Callback {
                 String finally_data = CommonUtils.getDataStrFromResult(result_data);
                 Log.e("Photo", "finally_data:" + finally_data);
                 if (CommonUtils.isSuccess(result_data)) {
-                    this.onSuccess(finally_data);
+                    this.onSuccess(result_data);
                 } else {
-                    this.onFalse(finally_data);
+                    this.onFalse(result_data);
                 }
             } else {
                 this.onException();
