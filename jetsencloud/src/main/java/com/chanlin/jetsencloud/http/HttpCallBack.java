@@ -25,6 +25,9 @@ public abstract class HttpCallBack implements Callback {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
+        if (response.code() != 200){
+            this.onFalse(response.body().string());
+        }
         String result_data = response.body().string();
         try {
             JSONObject js = new JSONObject(result_data);
@@ -35,9 +38,9 @@ public abstract class HttpCallBack implements Callback {
                 String finally_data = CommonUtils.getDataStrFromResult(result_data);
                 Log.e("Photo", "finally_data:" + finally_data);
                 if (CommonUtils.isSuccess(result_data)) {
-                    this.onSuccess(result_data);
+                    this.onSuccess(finally_data);
                 } else {
-                    this.onFalse(result_data);
+                    this.onFalse(finally_data);
                 }
             } else {
                 this.onException();

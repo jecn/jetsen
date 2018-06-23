@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,7 @@ import android.support.annotation.Nullable;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.chanlin.jetsencloud.util.SystemShare;
+import com.chanlin.jetsencloud.view.LoadingProgressDialog;
 import com.huayinghealth.testaar.entity.Theater;
 
 import org.json.JSONException;
@@ -39,6 +41,7 @@ public class FirstActivity extends Activity implements OnClickListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            LoadingProgressDialog.loadingDialog.dismiss();
             String result_json = msg.obj.toString();
             tv_content.setText(result_json);
             switch (msg.what){
@@ -47,10 +50,10 @@ public class FirstActivity extends Activity implements OnClickListener{
                     break;
                 case Constant.two_1:
                     try {
-                        JSONObject jsonObject = new JSONObject(result_json);
-                        int code = jsonObject.getInt("code");
-                        if (0 == code){
-                            JSONObject object = jsonObject.getJSONObject("data");
+                        //JSONObject jsonObject = new JSONObject(result_json);
+                       // int code = jsonObject.getInt("code");
+                        //if (0 == code){
+                            JSONObject object = new JSONObject(result_json);
                             //JSONArray jsonArray = object.getJSONArray("list");
                             final ArrayList<Theater> theaters  = JSON.parseObject(object.getString("list"),  new TypeReference<ArrayList<Theater>>() {});
                             //弹框
@@ -81,12 +84,14 @@ public class FirstActivity extends Activity implements OnClickListener{
                             });
 
                             builder.show();
-                        }
+                       // }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
+                case Constant.three_1:
 
+                    break;
             }
         }
     };
@@ -114,6 +119,7 @@ public class FirstActivity extends Activity implements OnClickListener{
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        LoadingProgressDialog.show(mContext,true,true);
         switch (id){
             case R.id.bt_one:
                 controller.cloud_login();
@@ -122,11 +128,14 @@ public class FirstActivity extends Activity implements OnClickListener{
                 controller.relation_list();
                 break;
             case R.id.bt_three:
-                controller.
+                controller.identity_login();
                 break;
             case R.id.bt_four:
+                controller.teacher_info();
                 break;
             case R.id.bt_five:
+                Intent it = new Intent(mContext, MainActivity.class);
+                startActivity(it);
                 break;
 
         }

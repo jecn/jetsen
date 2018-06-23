@@ -545,6 +545,14 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         CacheActivity.removeActivity(this);

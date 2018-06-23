@@ -49,6 +49,9 @@ public class FirstController {
         this.mMainHandler = handler;
     }
 
+    /**
+     * 云登录
+     */
     public void cloud_login(){
         if(!CommonUtils.isNetworkAvailable(mContext)){
             return;
@@ -78,10 +81,10 @@ public class FirstController {
                     Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.one_1);
 
                     try {
-                        JSONObject jsonObject = new JSONObject(result_json);
-                        int code = jsonObject.getInt("code");
-                        if (0 == code){
-                            JSONObject object = jsonObject.getJSONObject("data");
+                       // JSONObject jsonObject = new JSONObject(result_json);
+                       // int code = jsonObject.getInt("code");
+                        //if (0 == code){
+                            JSONObject object = new JSONObject(result_json);
                             String file = object.getString("file");
                             String token = object.getString("token");
                             String app_route = object.getString("app_route");
@@ -90,7 +93,7 @@ public class FirstController {
                             SystemShare.setSettingString(mContext, com.huayinghealth.testaar.Constant.token, token);
                             SystemShare.setSettingString(mContext, com.huayinghealth.testaar.Constant.app_route, app_route);
                             SystemShare.setSettingString(mContext, com.huayinghealth.testaar.Constant.kid, kid);
-                        }
+                       // }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -121,7 +124,9 @@ public class FirstController {
     }
 
 
-
+    /**
+     * 关系列表
+     */
     public void relation_list(){
         if(!CommonUtils.isNetworkAvailable(mContext)){
             return;
@@ -164,6 +169,140 @@ public class FirstController {
             public void onException() {
                 if (null != mMainHandler){
                     Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.two_3);
+                    success.sendToTarget();
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 具体身份登录
+     */
+    public void identity_login(){
+        if(!CommonUtils.isNetworkAvailable(mContext)){
+            return;
+        }
+        OkHttpClient mOkHttpClient = OKHttpUtil.getInstanceHttpClient();
+
+        int user_id = SystemShare.getSettingInt(mContext, com.huayinghealth.testaar.Constant.user_id);
+        String school_code = SystemShare.getSettingString(mContext, com.huayinghealth.testaar.Constant.school_code);
+        String type = "1";//老师
+        RequestBody body=null;
+        okhttp3.FormBody.Builder formEncodingBuilder=new okhttp3.FormBody.Builder();
+        formEncodingBuilder.add("user_id", String.valueOf(user_id));
+        formEncodingBuilder.add("school_code", school_code);
+        formEncodingBuilder.add("type", type);
+        body = formEncodingBuilder.build();
+        final Request request = new Request.Builder()
+                .url(Host)
+                .addHeader(Constant.k12appKey, Constant.k12appValue)
+                .addHeader(Constant.k12avKey, Constant.k12avValue)
+                .addHeader(Constant.k12url, "cloud/identity_login")
+                .addHeader(Constant.k12code, "cloud")
+                .addHeader(Constant.k12token, SystemShare.getSettingString(mContext, com.huayinghealth.testaar.Constant.token))
+                .post(body)
+                .build();
+        //new call
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new HttpCallBack() {
+            @Override
+            public void onSuccess(String result_json) {
+                if (null != mMainHandler){
+
+                    try {
+                       // JSONObject jsonObject = new JSONObject(result_json);
+                       // int code = jsonObject.getInt("code");
+                       // if (0 == code){
+                            JSONObject object = new JSONObject(result_json);
+                            String token = object.getString("school_token");
+                            SystemShare.setSettingString(mContext, com.huayinghealth.testaar.Constant.token, token);
+                      //  }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.three_1);
+                    success.obj = result_json;
+                    success.sendToTarget();
+                }
+            }
+            @Override
+            public void onFalse(String result_json) {
+                if (null != mMainHandler){
+                    Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.three_2);
+                    success.obj = result_json;
+                    success.sendToTarget();
+                }
+            }
+            @Override
+            public void onException() {
+                if (null != mMainHandler){
+                    Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.three_3);
+                    success.sendToTarget();
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 用户信息
+     */
+    public void teacher_info(){
+        if(!CommonUtils.isNetworkAvailable(mContext)){
+            return;
+        }
+        OkHttpClient mOkHttpClient = OKHttpUtil.getInstanceHttpClient();
+
+        final Request request = new Request.Builder()
+                .url(Host)
+                .addHeader(Constant.k12appKey, Constant.k12appValue)
+                .addHeader(Constant.k12avKey, Constant.k12avValue)
+                .addHeader(Constant.k12url, "user/teacher/info")
+                .addHeader(Constant.k12code, SystemShare.getSettingString(mContext, com.huayinghealth.testaar.Constant.school_code))
+                .addHeader(Constant.k12token, SystemShare.getSettingString(mContext, com.huayinghealth.testaar.Constant.token))
+                .build();
+        //new call
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new HttpCallBack() {
+            @Override
+            public void onSuccess(String result_json) {
+                if (null != mMainHandler){
+                    try {
+                       // JSONObject jsonObject = new JSONObject(result_json);
+                       // int code = jsonObject.getInt("code");
+                       // if (0 == code){
+                            JSONObject object = new JSONObject(result_json);
+                            String teacher_id = object.getString("teacher_id");
+                            SystemShare.setSettingString(mContext, com.huayinghealth.testaar.Constant.teacher_id, teacher_id);
+                       // }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.four_1);
+                    success.obj = result_json;
+                    success.sendToTarget();
+
+
+
+                }
+            }
+            @Override
+            public void onFalse(String result_json) {
+                if (null != mMainHandler){
+
+
+                    Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.four_2);
+                    success.obj = result_json;
+                    success.sendToTarget();
+                }
+            }
+            @Override
+            public void onException() {
+                if (null != mMainHandler){
+                    Message success = mMainHandler.obtainMessage(com.huayinghealth.testaar.Constant.four_3);
                     success.sendToTarget();
                 }
             }

@@ -22,6 +22,10 @@ public final class Constant {
     public static final int three_3 = 33;//异常id
 
 
+    public static final int four_1 = 41;//获取成功消息id
+    public static final int four_2 = 42;//失败id
+    public static final int four_3 = 43;//异常id
+
     public static final String kid = "kid";
     public static final String app_route = "api_url";
     public static final String avatar = "avatar";
@@ -34,5 +38,7 @@ public final class Constant {
     public static final String file = "file";
     public static final String course_ids = "course_ids";
     public static final String course_names = "course_names";
+
+    public static final String teacher_id = "teacher_id";
 
 }

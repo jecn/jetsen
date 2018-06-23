@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.chanlin.jetsencloud.JetsenMainActivity;
+import com.chanlin.jetsencloud.util.SystemShare;
 
 public class MainActivity extends Activity {
 
@@ -35,17 +36,22 @@ public class MainActivity extends Activity {
          */
 
         extras.putString("api_url","http://approute.kexinedu.net/api/route");
-        extras.putString("user_id", "1021");
-        extras.putString("user_name", "张海涛");
+        int user_id = SystemShare.getSettingInt(this, Constant.user_id);
+        extras.putString("user_id", String.valueOf(user_id));
+        extras.putString("user_name", "陈强");
         extras.putString("sex","1");
         extras.putString("avatar", "");
-        extras.putString("school_code", "s_51150017");
+        String school_code = SystemShare.getSettingString(this, Constant.school_code);
+        extras.putString("school_code", school_code);
         extras.putString("school_name", "宜宾科信中学");
-        extras.putString("teacher_id", "10016");
+        String teacher_id = SystemShare.getSettingString(this, Constant.teacher_id);
+        extras.putString("teacher_id", teacher_id);
         extras.putString("file", "http://file.kexinedu.net:8004/");
         extras.putString("file_up", "http://fileup.kexinedu.net:8005/");
         String[] ids = new String[]{"1","2","3"};
-        extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMjAiLCJ1c2VyX2lkIjo0NTEwLCJleHAiOjE1MjE3ODk3NzcsImxvZ2luX3R5cGUiOjF9.tDiXl4lnI9zbkVe5U7ow-VttR0oFUToVW9jFX_4WAGE");
+        String token = SystemShare.getSettingString(this, com.huayinghealth.testaar.Constant.token);
+        //extras.putString("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYl9wYWQiLCJzY2hvb2xfY29kZSI6InNfNTExNTAwMjAiLCJ1c2VyX2lkIjo0NTEwLCJleHAiOjE1MjE3ODk3NzcsImxvZ2luX3R5cGUiOjF9.tDiXl4lnI9zbkVe5U7ow-VttR0oFUToVW9jFX_4WAGE");
+        extras.putString("token", token);
         String[] names = new String[]{"语文","数学","英语"};
         extras.putStringArray("course_ids", ids);
         extras.putStringArray("course_names", names);
