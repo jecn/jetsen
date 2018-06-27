@@ -41,7 +41,8 @@ public class FileAdapter extends BaseMultiItemQuickAdapter<CourseStandardTree, B
     protected void convert(BaseViewHolder helper, CourseStandardTree item) {
         switch (helper.getItemViewType()){
             case type_file:
-                helper.setImageResource(R.id.type_icon,R.mipmap.file).setText(R.id.date,item.getDescription());
+              //  helper.setImageResource(R.id.type_icon,R.mipmap.file).setText(R.id.date,item.getDescription());
+                helper.setImageResource(R.id.type_icon,R.mipmap.file);
                 break;
             case type_directory:
                 if (item.isExpand){

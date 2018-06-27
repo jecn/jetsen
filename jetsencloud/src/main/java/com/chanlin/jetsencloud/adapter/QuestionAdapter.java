@@ -48,11 +48,12 @@ public class QuestionAdapter extends BaseAdapter {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MessageConfig.question_period_details_http_success_MESSAGE:
-                    ToastUtils.shortToast(mContext,"下载完成！");
+                    ToastUtils.shortToast(mContext,R.string.download_success);
 
                    // list = questionController.getQuestionPeriodList();
                     //更新列表
-                    updateItem();
+                    Object ob = msg.obj;
+                    updateItem(ob);
                     break;
 
             }
@@ -68,14 +69,17 @@ public class QuestionAdapter extends BaseAdapter {
         this.list = list;
         notifyDataSetChanged();
     }
-
+    private Handler mMainHandler;
+    public void setActivityHandler(Handler mMainHandler){
+        this.mMainHandler = mMainHandler;
+    }
     public void setListView(ListView view){
         this.listView = view;
     }
     /**
      * 刷新item
      */
-    private void updateItem(){
+    private void updateItem(Object ob){
         if (listView == null){
             return;
         }
@@ -89,9 +93,15 @@ public class QuestionAdapter extends BaseAdapter {
         iv.clearAnimation();
         iv.setImageResource(R.mipmap.img_delete);
         questionPeriod.setIsDownload("1");
+        notifyDataSetChanged();
         //刷新数据库
         DatabaseService.updateQuestionPeriodTable(questionPeriod.getCourse_standard_id(),questionPeriod.getId(),questionPeriod.getTitle(),questionPeriod.getIsDownload());
-
+/*
+        //判断是否是全部下载
+        if (ob != null){
+            String all = ob.toString();
+            mMainHandler.sendEmptyMessage(MessageConfig.download_resource_question_message);
+        }*/
     }
     @Override
     public int getCount() {
@@ -139,7 +149,7 @@ public class QuestionAdapter extends BaseAdapter {
 
                     question.setIsDownload("0");
                     hodler.down.setImageResource(R.mipmap.img_download);
-
+                    notifyDataSetChanged();
                 }else {
                     //动态授权
                     if (!JetsenResourceActivity.mIsGrant){
@@ -162,7 +172,7 @@ public class QuestionAdapter extends BaseAdapter {
                             hodler.down.startAnimation(animation);
                         }
 
-                        questionController.getQuestionPeriodDetailList(question.getCourse_standard_id(),question.getId());
+                        questionController.getQuestionPeriodDetailList(null,question);
 
                     }else {
                         ToastUtils.shortToast(mContext,R.string.no_sdcard);

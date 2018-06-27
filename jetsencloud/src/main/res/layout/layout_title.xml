@@ -29,20 +29,34 @@
             android:background="@mipmap/img_repeat" />
     </RelativeLayout>
 
-
+-->
     <RelativeLayout
-        android:id="@+id/bluetooth_delete"
-        android:layout_width="40dp"
+        android:id="@+id/rl_flush_file"
+        android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginRight="40dp"
-        android:layout_alignParentRight="true">
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_alignParentRight="true"
+        android:padding="1dp"
+        android:background="@color/white"
+        >
 
-        <ImageView
+        <!--<ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@mipmap/bluetooth_delete"/>
-    </RelativeLayout>-->
+            android:background="@mipmap/flush"/>-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/colorTitle"
+            android:text="@string/download_all"/>
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.chanlin.jetsencloud.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,7 +29,7 @@ public class QuestionFragment extends Fragment implements UpdateData {
     Context mContext;
     private ArrayList<QuestionPeriod> questionPeriodList = new ArrayList<>();
     ListView resourceListView;
-    QuestionAdapter resourceAdapter;
+    QuestionAdapter questionAdapter;
     public QuestionFragment(){
         mContext = Utils.getContext();
     }
@@ -48,9 +49,12 @@ public class QuestionFragment extends Fragment implements UpdateData {
     }
     private void initView(View view){
         resourceListView = (ListView) view.findViewById(R.id.lv_question);
-        resourceAdapter = new QuestionAdapter(mContext,questionPeriodList);
-        resourceAdapter.setListView(resourceListView);
-        resourceListView.setAdapter(resourceAdapter);
+        questionAdapter = new QuestionAdapter(mContext,questionPeriodList);
+        questionAdapter.setListView(resourceListView);
+        resourceListView.setAdapter(questionAdapter);
+    }
+    public void setActivityHandler(Handler mMainHandler){
+        questionAdapter.setActivityHandler(mMainHandler);
     }
     private void initListener(){
 
@@ -66,6 +70,6 @@ public class QuestionFragment extends Fragment implements UpdateData {
      */
     @Override
     public void updataQuestionPeriod(ArrayList<QuestionPeriod> questionPeriods) {
-        resourceAdapter.updateList(questionPeriods);
+        questionAdapter.updateList(questionPeriods);
     }
 }

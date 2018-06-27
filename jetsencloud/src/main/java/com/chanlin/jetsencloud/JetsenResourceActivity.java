@@ -50,6 +50,7 @@ import com.chanlin.jetsencloud.fragment.MainFragmentPagerAdapter;
 import com.chanlin.jetsencloud.fragment.QuestionFragment;
 import com.chanlin.jetsencloud.fragment.ResourceFragment;
 import com.chanlin.jetsencloud.fragment.UpdateData;
+import com.chanlin.jetsencloud.http.CommonUtils;
 import com.chanlin.jetsencloud.http.MessageConfig;
 import com.chanlin.jetsencloud.util.JsonSuccessUtil;
 import com.chanlin.jetsencloud.util.LogUtil;
@@ -82,6 +83,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
     private FileAdapter adapter;
     private ExpandablePresenter presenter;
 
+    private RelativeLayout rl_flush_file;// 一键下载刷新数据
 
     //右侧布局相关声明
     private LinearLayout mRLResource,mRLQuestion;
@@ -185,8 +187,34 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                         mHandler.sendEmptyMessage(MessageConfig.book_http_exception_MESSAGE);
                     }
                     break;
+                case MessageConfig.downlaod_resource_question_error:
+                    downloadCount --;
+                    ToastUtils.shortToast(mContext,R.string.download_error);
+                    if (downloadCount <= 0){
+                        LoadingProgressDialog.loadingDialog.dismiss();
+                       // ToastUtils.shortToast(mContext,R.string.download_success);
+                        //拿到数据后传递到Fragment里面去
+                        resourceTreeList = DatabaseService.findResourceTreeList(courseStandardTree.getId());
+                        questionPeriodList = DatabaseService.findQuestionPeriodList(courseStandardTree.getId());
+                        //发送消息给fragment更新数据
+                        resourceFragment.updataResourceTree(resourceTreeList);
+                        questionFragment.updataQuestionPeriod(questionPeriodList);
+                    }
+                    break;
+                case MessageConfig.download_resource_question_message:
+                    downloadCount --;
+                    if (downloadCount <= 0){
+                        LoadingProgressDialog.loadingDialog.dismiss();
+                        ToastUtils.shortToast(mContext,R.string.download_success);
+                        //拿到数据后传递到Fragment里面去
+                        resourceTreeList = DatabaseService.findResourceTreeList(courseStandardTree.getId());
+                        questionPeriodList = DatabaseService.findQuestionPeriodList(courseStandardTree.getId());
+                        //发送消息给fragment更新数据
+                        resourceFragment.updataResourceTree(resourceTreeList);
+                        questionFragment.updataQuestionPeriod(questionPeriodList);
+                    }
+                    break;
                 }
-
         }
     };
     @Override
@@ -218,6 +246,9 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         fl_no_data = (FrameLayout) findViewById(R.id.fl_no_data);
         frameLayout_content = (FrameLayout) findViewById(R.id.frameLayout_content);
 
+
+        rl_flush_file = (RelativeLayout) findViewById(R.id.rl_flush_file);//
+        rl_flush_file.setOnClickListener(this);
 
         fileRv = (RecyclerView) findViewById(R.id.fileRv);
         fileRv.setLayoutManager(new LinearLayoutManager(this));
@@ -484,6 +515,35 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                     lp.alpha = 0.7f;
                     getWindow().setAttributes(lp);
                 }
+        }else if (id == R.id.rl_flush_file){//下载资源和试题文件
+            //循环下载
+
+            downloadAllFile();
+        }
+    }
+
+    private static int downloadCount = 0;//总共要下载多少个文件
+    private void downloadAllFile(){
+
+        //下载
+        if(!CommonUtils.isNetworkAvailable(mContext)){
+            LoadingProgressDialog.loadingDialog.dismiss();
+            return;
+        }
+
+        if (resourceTreeList != null && resourceTreeList.size() > 0){
+            downloadCount += resourceTreeList.size();
+        }
+        if (questionPeriodList != null && questionPeriodList.size() > 0 ){
+            downloadCount += questionPeriodList.size();
+        }
+        if (downloadCount >= 1) {
+            LoadingProgressDialog.show(mContext,"downloading...",true,false);
+
+            questionFragment.setActivityHandler(mHandler);
+            resourceController.downlaodResourceAndQuestion(resourceTreeList, questionPeriodList);
+        }else {
+            ToastUtils.shortToast(mContext,R.string.no_resources_and_questions);
         }
     }
 

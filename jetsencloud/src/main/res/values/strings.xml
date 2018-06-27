@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">jetsenCloud</string>
     <string name="download_resource">备课资源-下载</string>
+    <string name="download_all">一键下载</string>
     <string name="prepare_resource">备课资源</string>
 
     <string name="http_exception">网络请求失败</string>
@@ -12,9 +13,11 @@
     <!-- 下载-->
     <string name="no_sdcard">设备没有SDcard！</string>
     <string name="download_error">文件下载失败！</string>
+    <string name="download_success">下载完成！</string>
     <string name="no_permission">未授予相关权限！</string>
     <string name="question_period">课时</string>
     <string name="no_question_list">没有选择题目</string>
     <string name="no_question_file">题目不存在或者下载失败！</string>
     <string name="json_err">题目解析失败！</string>
+    <string name="no_resources_and_questions">没有要下载的资源或者测验题目！</string>
 </resources>

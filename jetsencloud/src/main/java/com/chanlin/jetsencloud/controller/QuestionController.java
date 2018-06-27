@@ -4,10 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.widget.ImageView;
 
 import com.chanlin.jetsencloud.R;
 import com.chanlin.jetsencloud.adapter.QuestionAdapter;
 import com.chanlin.jetsencloud.database.DatabaseService;
+import com.chanlin.jetsencloud.entity.QuestionPeriod;
 import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
 import com.chanlin.jetsencloud.http.CommonUtils;
 import com.chanlin.jetsencloud.http.HttpCallBack;
@@ -101,9 +103,9 @@ public class QuestionController {
 
     /**
      *  获取课时 习题详情， 循环下载Jason
-     * @param question_period_id
+     * @param
      */
-    public void getQuestionPeriodDetailList(final int course_standard_id , final int question_period_id) {
+    public void getQuestionPeriodDetailList(final String all, final QuestionPeriod question) {
         if (!CommonUtils.isNetworkAvailable(mContext)) {
             ToastUtils.shortToast(mContext,mContext.getResources().getString(R.string.http_exception));
             return;
@@ -113,7 +115,7 @@ public class QuestionController {
         String code = SystemShare.getSettingString(mContext,Constant.k12code);
         //创建一个Request
         final Request request = new Request.Builder()
-                .url(Host+"?course_standard_id="+course_standard_id+"&question_period_id="+question_period_id)
+                .url(Host+"?course_standard_id="+question.getCourse_standard_id()+"&question_period_id="+question.getId())
                 .addHeader(Constant.k12appKey,Constant.k12appValue)
                 .addHeader(Constant.k12avKey,Constant.k12avValue)
                 .addHeader(Constant.k12url,Constant.code_question_period_details)
@@ -135,7 +137,7 @@ public class QuestionController {
                     //获取成功，接下来 循环  解析json 下载
                     downloadedCount = 0;//请求服务器成功清除原来的换成题目个数
                     try {
-                        downloadJson(question_period_id,result_json);
+                        downloadJson(all,question,result_json);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         if (null != mMainHandler){
@@ -164,7 +166,7 @@ public class QuestionController {
 
     }
 
-    private void downloadJson(final int question_period_id,String jstr) throws JSONException {
+    private void downloadJson(final String all,final QuestionPeriod questionPeriod,String jstr) throws JSONException {
         //ArrayList<QuestionPeriodDetail> periodDetails = new ArrayList<>();
         JSONObject dataJson = new JSONObject(jstr);
         if (!dataJson.has("list"))
@@ -175,7 +177,7 @@ public class QuestionController {
         for (int a = 0; a < count; a++) {
             JSONObject resultsJson = resultsArrayJson.getJSONObject(a);
             final QuestionPeriodDetail detail = new QuestionPeriodDetail();
-            detail.setQuestion_period_id(question_period_id);
+            detail.setQuestion_period_id(questionPeriod.getId());
             detail.setKey(resultsJson.getString("key"));
             detail.setUuid(resultsJson.getString("uuid"));
             String fileDir = SDCardUtils.getSDCardPath() + SDCardUtils.questionJsonFile;
@@ -184,7 +186,7 @@ public class QuestionController {
                 if (errcount == count){
                     if (null != mMainHandler){
                         Message success = mMainHandler.obtainMessage(MessageConfig.question_period_details_http_success_MESSAGE);
-                        //success.obj = QuestionAdapter.pubPosition;
+                        success.obj = all;
                         success.sendToTarget();
                     }
                 }
@@ -202,9 +204,21 @@ public class QuestionController {
                     if (count <= downloadedCount){
                         //表示全部下载完成
                         if (null != mMainHandler){
-                            Message success = mMainHandler.obtainMessage(MessageConfig.question_period_details_http_success_MESSAGE);
-                            //success.obj = QuestionAdapter.pubPosition;
-                            success.sendToTarget();
+                            if (all != null){
+
+                                questionPeriod.setIsDownload("1");
+                                //刷新数据库
+                                DatabaseService.updateQuestionPeriodTable(questionPeriod.getCourse_standard_id(),questionPeriod.getId(),questionPeriod.getTitle(),questionPeriod.getIsDownload());
+
+                                Message success = mMainHandler.obtainMessage(MessageConfig.download_resource_question_message);
+                                success.obj = all;//
+                                success.sendToTarget();
+                            }else {
+
+                                Message success = mMainHandler.obtainMessage(MessageConfig.question_period_details_http_success_MESSAGE);
+                                success.obj = all;//
+                                success.sendToTarget();
+                            }
                         }
                     }
                 }

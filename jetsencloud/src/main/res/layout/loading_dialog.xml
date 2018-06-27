@@ -7,13 +7,22 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_centerInParent="true" >
 
         <ImageView
             android:id="@+id/iv_loading_dialog"
             android:layout_width="40dp"
             android:layout_height="40dp"
+android:layout_centerHorizontal="true"
             android:src="@mipmap/loading" />
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_below="@id/iv_loading_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="loading"/>
 
     </RelativeLayout>
 

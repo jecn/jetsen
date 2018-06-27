@@ -35,5 +35,9 @@ public final class MessageConfig {
     public static final int question_period_details_http_exception_MESSAGE = 51111;//question_period_details异常id
 
 
+    public static final int download_resource_question_message = 666;//下载成功啊
+    public static final int downlaod_resource_question_error = 999;//下载失败
+
+
 
 }

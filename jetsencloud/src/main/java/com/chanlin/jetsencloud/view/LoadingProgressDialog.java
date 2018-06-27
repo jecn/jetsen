@@ -3,13 +3,16 @@ package com.chanlin.jetsencloud.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chanlin.jetsencloud.R;
+import com.chanlin.jetsencloud.util.StringUtils;
 
 
 public class LoadingProgressDialog {
@@ -64,11 +67,18 @@ public class LoadingProgressDialog {
         window.setAttributes(lp);
         ImageView ivLoading = (ImageView) loadingDialog
                 .findViewById(R.id.iv_loading_dialog);
+        TextView tv = (TextView)loadingDialog.findViewById(R.id.tv_msg);
+        if (StringUtils.isEmpty(msg)){
+            tv.setVisibility(View.GONE);
+        }else{
+            tv.setText(msg);
+        }
         Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
                 context, R.anim.loading_animation);
         ivLoading.startAnimation(hyperspaceJumpAnimation);
         showtext = null;
         loadingDialog.setCancelable(isCancel);
+        loadingDialog.setCanceledOnTouchOutside(false);
         if (handler == null) {
             handler = new Handler();
         }
