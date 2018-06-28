@@ -32,14 +32,12 @@
 -->
     <RelativeLayout
         android:id="@+id/rl_flush_file"
-        android:layout_width="60dp"
+        android:layout_width="70dp"
         android:layout_height="60dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_5"
         android:layout_alignParentRight="true"
-        android:padding="1dp"
-        android:background="@color/white"
         >
 
         <!--<ImageView
@@ -53,8 +51,16 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:textColor="@color/white"
-            android:background="@color/colorTitle"
+            android:background="@drawable/download_all_2"
             android:text="@string/download_all"/>
+        <!--<Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_all"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:background="@drawable/download_all_2"/>-->
+
 
     </RelativeLayout>
 

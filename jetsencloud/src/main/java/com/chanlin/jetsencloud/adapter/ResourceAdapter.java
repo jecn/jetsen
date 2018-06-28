@@ -19,6 +19,7 @@ import com.chanlin.jetsencloud.http.CommonUtils;
 import com.chanlin.jetsencloud.http.OKHttpUtil;
 import com.chanlin.jetsencloud.http.ReqCallBack;
 import com.chanlin.jetsencloud.util.Constant;
+import com.chanlin.jetsencloud.util.OpenFileUtil;
 import com.chanlin.jetsencloud.util.SDCardUtils;
 import com.chanlin.jetsencloud.util.SystemShare;
 import com.chanlin.jetsencloud.util.ToastUtils;
@@ -150,6 +151,20 @@ public class ResourceAdapter extends BaseAdapter{
                         ToastUtils.shortToast(mContext,R.string.no_sdcard);
                     }
 
+                }
+            }
+        });
+
+
+        //打开文件
+        hodler.file_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(tree.getFile_url()  != null && !"".equals(tree.getFile_url())){
+                    //已下载,直接打开
+                    OpenFileUtil.getInstance(mContext).openFile(tree.getFile_url());
+                }else{
+                    ToastUtils.shortToast(mContext,R.string.not_download_file);
                 }
             }
         });

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chanlin.jetsencloud">
 
@@ -13,27 +14,39 @@
         android:supportsRtl="true">
         <activity
             android:name=".JetsenMainActivity"
-            android:screenOrientation="landscape"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".JetsenResourceActivity"
-            android:screenOrientation="landscape"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".JetsenSendExerciseActivity"
-            android:screenOrientation="landscape"
             android:launchMode="singleInstance"
-            />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".JetsenPrepareResourceActivity"
-            android:screenOrientation="landscape"
             android:launchMode="singleInstance"
-            />
+            android:screenOrientation="landscape" />
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <provider
             android:name=".database.DatabaseProvider"
             android:authorities="ChanLin"
             android:exported="true" />
+
+        <activity
+            android:screenOrientation="landscape"
+            android:launchMode="singleInstance"
+            android:name=".QuestionViewActivity"></activity>
     </application>
 
 </manifest>

@@ -1,8 +1,11 @@
 package com.chanlin.jetsencloud.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +18,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.chanlin.jetsencloud.JetsenResourceActivity;
+import com.chanlin.jetsencloud.QuestionViewActivity;
 import com.chanlin.jetsencloud.R;
 import com.chanlin.jetsencloud.controller.QuestionController;
 import com.chanlin.jetsencloud.database.DatabaseService;
 import com.chanlin.jetsencloud.database.DatabaseUtils;
+import com.chanlin.jetsencloud.entity.QuestionContent;
 import com.chanlin.jetsencloud.entity.QuestionPeriod;
+import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
 import com.chanlin.jetsencloud.http.CommonUtils;
 import com.chanlin.jetsencloud.http.MessageConfig;
+import com.chanlin.jetsencloud.util.FileUtils;
 import com.chanlin.jetsencloud.util.SDCardUtils;
 import com.chanlin.jetsencloud.util.StringUtils;
 import com.chanlin.jetsencloud.util.ToastUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ChanLin on 2018/1/12.
@@ -133,7 +145,8 @@ public class QuestionAdapter extends BaseAdapter {
             hodler = (ViewHodler) convertView.getTag();
         }
         final QuestionPeriod question = list.get(position);
-        hodler.file_title.setText(mContext.getResources().getString(R.string.question_period)+" "+(question.getTitle()));
+        //hodler.file_title.setText(mContext.getResources().getString(R.string.question_period)+" "+(question.getTitle()));
+        hodler.file_title.setText(question.getTitle());
         final String isDownload = question.getIsDownload();
         if (!StringUtils.isEmpty(isDownload) && "1".equals(isDownload)){//1 表示已经下载了，
             hodler.down.setImageResource(R.mipmap.img_delete);
@@ -180,9 +193,183 @@ public class QuestionAdapter extends BaseAdapter {
                 }
             }
         });
+
+        hodler.file_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!StringUtils.isEmpty(isDownload) && "1".equals(isDownload)){//1 表示已经下载了，
+                    //需要读取数据库数据，然后循环的 列举题目
+                    List<QuestionPeriodDetail> periodDetails = DatabaseService.findQuestionPeriodDetailList(question.getId());
+                    getViewOfQuestions(periodDetails);
+                }else {
+                    ToastUtils.shortToast(mContext,R.string.not_download_file);
+                }
+            }
+        });
         return view;
     }
 
+    private void getViewOfQuestions(List<QuestionPeriodDetail> periodDetails){
+        //拼凑 HTML
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html>");
+        sb.append("<html>");
+        sb.append("<head>");
+        sb.append("<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">");
+        sb.append("<style type=\"text/css\">\n" +
+                ".div1 {\n" +
+                "\theight: auto;\n" +
+                "\twidth: 92%;\n" +
+                "\tmargin-top: 5%;\n" +
+                "\tmargin-right: auto;\n" +
+                "\tmargin-bottom: 10%;\n" +
+                "\tmargin-left: auto;\n" +
+                "}" +
+                "</style>");
+        sb.append("</head>");
+        sb.append("<body>");
+//        sb.append("<center>");
+        sb.append("  <div class=\"div1\">");
+        for (int i = 0 ; i < periodDetails.size(); i++){
+            QuestionPeriodDetail periodDetail = periodDetails.get(i);
+            String url = periodDetail.getUrl();
+            if (!StringUtils.isEmpty(url)){
+                boolean fileExit = FileUtils.isFileExists(url);
+                if (fileExit) {
+                    String jstr = FileUtils.getJsonFile(url);
+                    if (StringUtils.isEmpty(jstr)){
+
+                    }else {
+                        JSONObject jsonObject = null;
+                        try {
+
+                            jsonObject = new JSONObject(jstr);
+                            QuestionContent content = pullJson(jsonObject);
+                            sb.append((i+1)+".");
+                            String pid_title = content.getPid_title();
+                            if (!StringUtils.isEmpty(pid_title)){
+                                sb.append("<p>" + new String(pid_title.getBytes(),"UTF-8") + "</p>");
+
+                               // sb.append("<p>" + new String(pid_title.getBytes(),"UTF-8") + "</p>");
+                            }
+                            String  pid_title_key= content.getPid_title_key();
+                            if (!StringUtils.isEmpty(pid_title_key)){
+                                sb.append("<p>" + new String(pid_title_key.getBytes(),"UTF-8") + "</p>");
+                                //sb.append("<p>" + new String(pid_title_key.getBytes(),"UTF-8") + "</p>");
+                            }
+                            String title = content.getTitle();
+                            if (!StringUtils.isEmpty(title)){
+                                sb.append("<p>" + new String(title.getBytes(),"UTF-8") + "</p>");
+                               // sb.append("<p>" + new String(title.getBytes(),"UTF-8") + "</p>");
+                            }
+                            String title_key= content.getTitle_key();
+                            if (!StringUtils.isEmpty(title_key)){
+                                sb.append("<p>" + new String(title_key.getBytes(),"UTF-8") + "</p>");
+                              //  sb.append("<p>" + new String(title_key.getBytes(),"UTF-8") + "</p>");
+                            }
+                            String answer= content.getAnswer();
+                            if (!StringUtils.isEmpty(answer)){
+                                sb.append("<p>【答案】" + new String(answer.getBytes(),"UTF-8") + "</p>");
+                              //  sb.append("<p>【答案】" + new String(answer.getBytes(),"UTF-8") + "</p>");
+                            }
+                            String parse = content.getParse();
+                            if (!StringUtils.isEmpty(parse)){
+                                sb.append("<p>【解析】" + new String(parse.getBytes(),"UTF-8") + "</p>");
+                                //sb.append("<p>【解析】" + new String(parse.getBytes(),"UTF-8") + "</p>");
+                            }
+                            String parse_key = content.getParse_key();
+                            if (!StringUtils.isEmpty(parse_key)){
+                                sb.append("<p>" + new String(parse_key.getBytes(),"UTF-8") + "</p>");
+                            }
+                            sb.append("<p></p>");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+        }
+
+        sb.append("</div>");
+        //sb.append("</center>");
+        sb.append("</body>\n" +
+                "</html>");
+
+        Log.i("html",sb.toString());
+        Intent it = new Intent(mContext, QuestionViewActivity.class);
+//        Bundle bd = new Bundle();
+//        bd.putString("html",sb.toString());
+        //try {
+            //it.putExtra("html",new String(sb.toString().getBytes("gbk"),"utf-8"));
+       // } catch (UnsupportedEncodingException e) {
+        //    e.printStackTrace();
+           it.putExtra("html",sb.toString());
+       // }
+        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(it);
+
+       // String code = getEncoding(sb.toString());
+      //  Log.i("code ",code);
+
+    }
+
+    public  String getEncoding(String str) {
+        String encode = "GB2312";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {      //判断是不是GB2312
+                String s = encode;
+                return s;      //是的话，返回“GB2312“，以下代码同理
+            }
+        } catch (Exception exception) {
+        }
+        encode = "ISO-8859-1";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {      //判断是不是ISO-8859-1
+                String s1 = encode;
+                return s1;
+            }
+        } catch (Exception exception1) {
+        }
+        encode = "UTF-8";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {   //判断是不是UTF-8
+                String s2 = encode;
+                return s2;
+            }
+        } catch (Exception exception2) {
+        }
+        encode = "GBK";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {      //判断是不是GBK
+                String s3 = encode;
+                return s3;
+            }
+        } catch (Exception exception3) {
+        }
+        return "";        //如果都不是，说明输入的内容不属于常见的编码格式。
+    }
+    private QuestionContent pullJson(JSONObject jsonObject) throws JSONException{
+        if (jsonObject != null){
+            QuestionContent content = new QuestionContent();
+            content.setUuid(jsonObject.getString("uuid"));
+            content.setType(jsonObject.getInt("type"));
+            content.setOptions(jsonObject.getInt("options"));
+            content.setAnswer(jsonObject.getString("answer"));
+            content.setTitle(jsonObject.getString("title"));
+            content.setTitle_key(jsonObject.getString("title_key"));
+            content.setPid_title(jsonObject.getString("pid_title"));
+            content.setPid_title_key(jsonObject.getString("pid_title_key"));
+            content.setParse(jsonObject.getString("parse"));
+            content.setParse_key(jsonObject.getString("parse_key"));
+            return content;
+        }else {
+            return null;
+        }
+    }
     class ViewHodler{
 
         TextView file_title;
