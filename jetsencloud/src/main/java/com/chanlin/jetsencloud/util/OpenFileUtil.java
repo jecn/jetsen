@@ -78,7 +78,7 @@ public class OpenFileUtil {
             String con = mContext.getPackageName();
             uri =
                     FileProvider.getUriForFile(mContext,
-                            con + ".provider",
+                            con + ".read_provider",
                             file);
             //添加这一句表示对目标应用临时授权该Uri所代表的文件
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
