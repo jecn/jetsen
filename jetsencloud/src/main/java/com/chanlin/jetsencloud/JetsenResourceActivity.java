@@ -189,7 +189,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                     break;
                 case MessageConfig.downlaod_resource_question_error:
                     downloadCount --;
-                    ToastUtils.shortToast(mContext,R.string.download_error);
+                    ToastUtils.shortToast(mContext,getResources().getString(R.string.download_error));
                     if (downloadCount <= 0){
                         LoadingProgressDialog.loadingDialog.dismiss();
                        // ToastUtils.shortToast(mContext,R.string.download_success);
@@ -321,7 +321,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         //fl_no_data.setVisibility(View.VISIBLE);
         //frameLayout_content.setVisibility(View.GONE);
         //服务器上去刷新所有的 树状结构数据
-        LoadingProgressDialog.show(mContext,true,true);
+        LoadingProgressDialog.show(mContext,getString(R.string.progress_msg),true,true);
             bookController.getBookList(mHandler,courseId);
 
     }
@@ -543,7 +543,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
             questionFragment.setActivityHandler(mHandler);
             resourceController.downlaodResourceAndQuestion(resourceTreeList, questionPeriodList);
         }else {
-            ToastUtils.shortToast(mContext,R.string.no_resources_and_questions);
+            ToastUtils.shortToast(mContext,getString(R.string.no_resources));
         }
     }
 

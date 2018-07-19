@@ -18,11 +18,13 @@ import android.widget.Toast;
 
 import com.chanlin.jetsencloud.adapter.GridViewAdapter;
 import com.chanlin.jetsencloud.entity.QuestionPeriodDetail;
+import com.chanlin.jetsencloud.http.CommonUtils;
 import com.chanlin.jetsencloud.util.CacheActivity;
 import com.chanlin.jetsencloud.util.Constant;
 import com.chanlin.jetsencloud.util.LogUtil;
 import com.chanlin.jetsencloud.util.StringUtils;
 import com.chanlin.jetsencloud.util.SystemShare;
+import com.chanlin.jetsencloud.util.ToastUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -171,7 +173,10 @@ public class JetsenMainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                // LogUtil.showWarn(TAG, course[position][1]);
-
+                if(!CommonUtils.isNetworkAvailable(mContext)){
+                    ToastUtils.shortToast(mContext,getResources().getString(R.string.no_network));
+                    return;
+                }
                 //点击后跳转 传递值到另外一个页面
                 Intent it  = new Intent(jetsenMainActivity.mContext,JetsenResourceActivity.class);
                 it.putExtra("courceId", course_ids[position]);

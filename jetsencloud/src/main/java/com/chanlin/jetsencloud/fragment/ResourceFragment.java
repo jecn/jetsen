@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.chanlin.jetsencloud.R;
@@ -28,6 +29,7 @@ public class ResourceFragment extends Fragment implements UpdateData {
     Context mContext;
     private ArrayList<ResourceTree> resourceTreeList = new ArrayList<>();
     ListView resourceListView;
+    FrameLayout fl_no_data;
     ResourceAdapter resourceAdapter;
     public ResourceFragment(){
         mContext = Utils.getContext();
@@ -51,6 +53,7 @@ public class ResourceFragment extends Fragment implements UpdateData {
         resourceListView = (ListView) view.findViewById(R.id.lv_resource);
         resourceAdapter = new ResourceAdapter(mContext,resourceTreeList);
         resourceListView.setAdapter(resourceAdapter);
+        fl_no_data = (FrameLayout) view.findViewById(R.id.fl_no_data);
     }
     private void initListener(){
 
@@ -62,7 +65,13 @@ public class ResourceFragment extends Fragment implements UpdateData {
      */
     @Override
     public void updataResourceTree(ArrayList<ResourceTree> resourceTrees) {
-        resourceAdapter.updateList(resourceTrees);
+        if (resourceTrees != null && resourceTrees.size() > 0) {
+            fl_no_data.setVisibility(View.GONE);
+            resourceAdapter.updateList(resourceTrees);
+
+        }else {
+            fl_no_data.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

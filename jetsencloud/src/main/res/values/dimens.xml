@@ -5,4 +5,6 @@
     <dimen name="motion_position_text_size">14dp</dimen>
     <dimen name="dp_10">10dp</dimen>
     <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_50">50dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
 </resources>

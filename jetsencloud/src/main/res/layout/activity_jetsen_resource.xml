@@ -11,18 +11,7 @@
 
     <include layout="@layout/layout_title"></include>
 
-    <FrameLayout
-        android:id="@+id/fl_no_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="暂无数据!" />
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frameLayout_content"
@@ -71,7 +60,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/motion_detail_position_text" />
+                <FrameLayout
+                    android:id="@+id/fl_no_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/no_books" />
+                </FrameLayout>
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/fileRv"
                     android:layout_width="match_parent"

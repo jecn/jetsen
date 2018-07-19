@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.chanlin.jetsencloud.R;
@@ -29,6 +30,7 @@ public class QuestionFragment extends Fragment implements UpdateData {
     Context mContext;
     private ArrayList<QuestionPeriod> questionPeriodList = new ArrayList<>();
     ListView resourceListView;
+    FrameLayout fl_no_data;
     QuestionAdapter questionAdapter;
     public QuestionFragment(){
         mContext = Utils.getContext();
@@ -52,6 +54,7 @@ public class QuestionFragment extends Fragment implements UpdateData {
         questionAdapter = new QuestionAdapter(mContext,questionPeriodList);
         questionAdapter.setListView(resourceListView);
         resourceListView.setAdapter(questionAdapter);
+        fl_no_data = (FrameLayout) view.findViewById(R.id.fl_no_data);
     }
     public void setActivityHandler(Handler mMainHandler){
         questionAdapter.setActivityHandler(mMainHandler);
@@ -70,6 +73,11 @@ public class QuestionFragment extends Fragment implements UpdateData {
      */
     @Override
     public void updataQuestionPeriod(ArrayList<QuestionPeriod> questionPeriods) {
-        questionAdapter.updateList(questionPeriods);
+        if (questionPeriods != null && questionPeriods.size() > 0) {
+            fl_no_data.setVisibility(View.GONE);
+            questionAdapter.updateList(questionPeriods);
+        }else {
+            fl_no_data.setVisibility(View.VISIBLE);
+        }
     }
 }
