@@ -65,7 +65,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
     //popupWindow弹出框
     private LinearLayout ll_preparesource;
     private RelativeLayout relative_booklist;
-    private TextView text_book_name;
+    private TextView text_book_name,no_download_resources;//数据时候显示提示
     private ImageView img_booklist;
     private ListView mlistview;
     private View view;
@@ -114,7 +114,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         relative_booklist = (RelativeLayout) findViewById(R.id.relative_booklist);
         text_book_name = (TextView) findViewById(R.id.tv_book_name);
         text_book_name.setOnClickListener(this);
-
+        no_download_resources = (TextView) findViewById(R.id.no_download_resources);
         img_booklist = (ImageView) findViewById(R.id.img_booklist);
         ll_preparesource = (LinearLayout) findViewById(R.id.ll_preparesource);
 
@@ -224,7 +224,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
                 }
                 //这里就去访问数据库资源和题库里的内容，如果没有则访问服务器的
                 //拿到数据后传递到Fragment里面去
-                resourceTreeList = DatabaseService.findResourceTreeList(entity.getId());
+                resourceTreeList = DatabaseService.findResourceTreeList(entity.getId(), false);// z这里是使用未下载的列表，所以不是查询所有文件
                 questionPeriodList = DatabaseService.findQuestionPeriodList(entity.getId());
                 //发送消息给fragment更新数据
 //                resourceFragment.updataResourceTree(resourceTreeList);
@@ -235,6 +235,11 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
 //                questionController.getQuestionPeriodList(entity.getId());
 
                 //刷新 listview
+                if (resourceTreeList == null || resourceTreeList.size() == 0){
+                    no_download_resources.setVisibility(View.VISIBLE);
+                }else{
+                    no_download_resources.setVisibility(View.GONE);
+                }
                 prepareResourceAdapter.updateList(resourceTreeList);
             }
         });

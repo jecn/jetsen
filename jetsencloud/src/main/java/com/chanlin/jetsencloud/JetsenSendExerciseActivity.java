@@ -60,7 +60,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
 
     // 题目类型（选择、判断、填空、主观）
     private RelativeLayout rl_types1, rl_types2, rl_types3, rl_types4;
-    private TextView tv_types1, tv_types2, tv_types3, tv_types4;
+    private TextView tv_types1, tv_types2, tv_types3, tv_types4 , no_downlaod_questions;
     private ImageView view_types1, view_types2, view_types3, view_types4;
     private ArrayList<QuestionPeriodDetail> questionContentList2 = new ArrayList<>();
 
@@ -146,6 +146,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
         img_booklist = (ImageView) findViewById(R.id.img_booklist);
         ll_sendexercise = (LinearLayout) findViewById(R.id.ll_sendexercise);
 
+        no_downlaod_questions = (TextView) findViewById(R.id.no_downlaod_questions);
         // 题目类型（选择、判断、填空、主观）
         rl_types1 = (RelativeLayout) findViewById(R.id.rl_types1);
         rl_types2 = (RelativeLayout) findViewById(R.id.rl_types2);
@@ -191,6 +192,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 //刷新课时数据
                 mAdapter.updateAdapter(questionPeriodList);
                 if (questionPeriodList != null && questionPeriodList.size() > 0) {
+                    no_downlaod_questions.setVisibility(View.GONE);
                     ll_question_view.setVisibility(View.VISIBLE);
                     questionContentList = DatabaseService.findQuestionPeriodDetailListWhereUrlNotNull(questionPeriodList.get(0).getId());
                     int type = getType(questionContentList); // 获取默认初始题型
@@ -198,7 +200,8 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                     getQuestionListTypeDate(type, questionContentList); // 过滤题目列表
                     listViewAdapter.updateList(questionContentList2);
                 } else {
-                    ll_question_view.setVisibility(View.INVISIBLE);
+                    ll_question_view.setVisibility(View.GONE);
+                    no_downlaod_questions.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -301,7 +304,8 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
     private void setGridView() {
         //右侧内容
         ll_question_view = (LinearLayout) findViewById(R.id.ll_question_view);
-        ll_question_view.setVisibility(View.INVISIBLE);
+        ll_question_view.setVisibility(View.GONE);
+        no_downlaod_questions.setVisibility(View.VISIBLE);
         gv_question_period_list = (RecyclerView) findViewById(R.id.gv_question_period_list);
         //设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

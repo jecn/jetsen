@@ -57,7 +57,8 @@ public class FirstController {
             return;
         }
         OkHttpClient mOkHttpClient = OKHttpUtil.getInstanceHttpClient();
-        String username = "1530618";
+        //String username = "1530618";
+        String username = "13723707851";
         String password = "123456";
         RequestBody body=null;
         okhttp3.FormBody.Builder formEncodingBuilder=new okhttp3.FormBody.Builder();

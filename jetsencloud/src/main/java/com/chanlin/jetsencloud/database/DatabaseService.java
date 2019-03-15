@@ -429,15 +429,20 @@ public class DatabaseService {
     }
 
     /**
-     * 查资源列表
+     * 查资源列表 :
+     * isAll 是否查询所有，true未下载的 也查询出来， false  查询 已下载的
      */
-    public static ArrayList<ResourceTree> findResourceTreeList(int resource_course_standard_id){
+    public static ArrayList<ResourceTree> findResourceTreeList(int resource_course_standard_id,boolean isAll){
         ArrayList<ResourceTree> bookList = new ArrayList<ResourceTree>();
         LogUtil.showInfo(TAG,"findBookList resource_course_standard_id="+resource_course_standard_id);
         String where_cause = DatabaseObject.ResourceTreeTable.resource_course_standard_id
-                + " =? and "
-                + DatabaseObject.ResourceTreeTable.resource_file_url
-                + " is not null";
+                + " =? ";
+        if (!isAll){
+            where_cause += "and " + DatabaseObject.ResourceTreeTable.resource_file_url
+//                + " is not null or "
+//                + DatabaseObject.ResourceTreeTable.resource_file_url
+                    + " != '' ";
+        }
         String[] where_args = new String[] { String.valueOf(resource_course_standard_id)};
         Cursor cursor=null;
         try {

@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         extras.putString("api_url","http://approute.kexinedu.net/api/route");
         int user_id = SystemShare.getSettingInt(this, Constant.user_id);
         extras.putString("user_id", String.valueOf(user_id));
-        extras.putString("user_name", "陈强");
+        extras.putString("user_name", "向成林");
         extras.putString("sex","1");
         extras.putString("avatar", "");
         String school_code = SystemShare.getSettingString(this, Constant.school_code);

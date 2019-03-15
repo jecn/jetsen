@@ -109,7 +109,14 @@
                 android:layout_width="1px"
                 android:layout_height="match_parent"
                 android:background="@color/motion_detail_position_text"></View>
+            <TextView
+                android:id="@+id/no_downlaod_questions"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
 
+                android:gravity="center_vertical"
+                android:text="@string/no_downlaod_questions" />
             <LinearLayout
                 android:id="@+id/ll_question_view"
                 android:layout_width="0dp"
