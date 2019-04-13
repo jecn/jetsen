@@ -138,8 +138,9 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
         fileRv.setAdapter(adapter);
 
         relative_booklist = (RelativeLayout) findViewById(R.id.relative_booklist);
+        relative_booklist.setOnClickListener(this);
         text_book_name = (TextView) findViewById(R.id.tv_book_name);
-        text_book_name.setOnClickListener(this);
+       // text_book_name.setOnClickListener(this);
         send_exercise = (TextView) findViewById(R.id.sendexercise);
         send_exercise.setOnClickListener(this);
 
@@ -404,7 +405,7 @@ public class JetsenSendExerciseActivity extends Activity implements ExpandView, 
                 //finish();
             }
 
-        } else if (id == R.id.tv_book_name) { // popupWindow弹框
+        } else if (id == R.id.relative_booklist) { // popupWindow弹框
             if (popupWindow.isShowing()) {
                 popupWindow.dismiss();
             } else {

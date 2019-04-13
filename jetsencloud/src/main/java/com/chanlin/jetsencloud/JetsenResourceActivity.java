@@ -276,8 +276,9 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         mTabLineIv = (ImageView) this.findViewById(R.id.id_tab_line_iv);
 
         relative_booklist = (RelativeLayout) findViewById(R.id.relative_booklist);
+        relative_booklist.setOnClickListener(this);
         text_book_name = (TextView) findViewById(R.id.tv_book_name);
-        text_book_name.setOnClickListener(this);
+        //text_book_name.setOnClickListener(this);
 
         img_booklist = (ImageView) findViewById(R.id.img_booklist);
         ll_resource = (LinearLayout) findViewById(R.id.ll_resource);
@@ -502,7 +503,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
             currentIndex = 1;
             resetTextView();
             updateBtnColor();
-        }else if (id == R.id.tv_book_name){ // popupWindow弹框
+        }else if (id == R.id.relative_booklist){ // popupWindow弹框
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
 //                    img_booklist.setImageResource(R.mipmap.img_booklist_right);

@@ -112,8 +112,9 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         fileRv.setAdapter(adapter);
 
         relative_booklist = (RelativeLayout) findViewById(R.id.relative_booklist);
+        relative_booklist.setOnClickListener(this);
         text_book_name = (TextView) findViewById(R.id.tv_book_name);
-        text_book_name.setOnClickListener(this);
+        //text_book_name.setOnClickListener(this);
         no_download_resources = (TextView) findViewById(R.id.no_download_resources);
         img_booklist = (ImageView) findViewById(R.id.img_booklist);
         ll_preparesource = (LinearLayout) findViewById(R.id.ll_preparesource);
@@ -265,7 +266,7 @@ public class JetsenPrepareResourceActivity extends FragmentActivity implements E
         int id = v.getId();
         if (id == R.id.title_back){
             finish();
-        }else if(id == R.id.tv_book_name){ // popupWindow弹框
+        }else if(id == R.id.relative_booklist){ // popupWindow弹框
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
