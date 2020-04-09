@@ -57,8 +57,13 @@ public class FirstController {
             return;
         }
         OkHttpClient mOkHttpClient = OKHttpUtil.getInstanceHttpClient();
-        String username = "1530618";
-        String password = "123456";
+        /*String username = "1530618";
+        String password = "123456";*/
+        //学生登录
+        /*String username = "849054";
+        String password = "h123456";*/
+        String username = "13030253018";
+        String password = "Huaying88";
         RequestBody body=null;
         okhttp3.FormBody.Builder formEncodingBuilder=new okhttp3.FormBody.Builder();
         formEncodingBuilder.add("username", username);
@@ -132,9 +137,10 @@ public class FirstController {
             return;
         }
         OkHttpClient mOkHttpClient = OKHttpUtil.getInstanceHttpClient();
-
+        String type = "1";//老师
+//        String type = "0";//学生
         final Request request = new Request.Builder()
-                .url(Host+"?kid="+SystemShare.getSettingString(mContext, com.huayinghealth.testaar.Constant.kid)+"&user_type=1")
+                .url(Host+"?kid="+SystemShare.getSettingString(mContext, com.huayinghealth.testaar.Constant.kid)+"&user_type="+type)
                 .addHeader(Constant.k12appKey, Constant.k12appValue)
                 .addHeader(Constant.k12avKey, Constant.k12avValue)
                 .addHeader(Constant.k12url, "cloud/relation_list")
@@ -188,6 +194,7 @@ public class FirstController {
         int user_id = SystemShare.getSettingInt(mContext, com.huayinghealth.testaar.Constant.user_id);
         String school_code = SystemShare.getSettingString(mContext, com.huayinghealth.testaar.Constant.school_code);
         String type = "1";//老师
+//        String type = "0";//学生
         RequestBody body=null;
         okhttp3.FormBody.Builder formEncodingBuilder=new okhttp3.FormBody.Builder();
         formEncodingBuilder.add("user_id", String.valueOf(user_id));
