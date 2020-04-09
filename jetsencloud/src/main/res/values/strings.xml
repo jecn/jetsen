@@ -24,5 +24,10 @@
     <string name="no_books">未加载到课标数据，\n请确保网络正常后返回重新加载！</string>
     <string name="no_resources">没有查到课件数据，请选择左侧已经背过课程课件的课标树对应的章节！</string>
     <string name="no_questions">没有查到习题数据，请选择左侧已经背过课程习题的课标树对应的章节！</string>
+    <string name="delete_and_download_agin">如果发现备课习题与下载的习题不对应，请删除习题后重新下载！</string>
+
+
+    <string name="no_download_resources">没有查到课件数据，请确保该章节的备课资源已经下载到平板上！</string>
+    <string name="no_downlaod_questions">没有查到习题数据，请确保该章节的备课习题已经下载到平板上！</string>
     <string name="progress_msg">数据玩命加载中...</string>
 </resources>

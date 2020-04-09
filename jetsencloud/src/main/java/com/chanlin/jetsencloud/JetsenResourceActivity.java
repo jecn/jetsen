@@ -194,7 +194,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                         LoadingProgressDialog.loadingDialog.dismiss();
                        // ToastUtils.shortToast(mContext,R.string.download_success);
                         //拿到数据后传递到Fragment里面去
-                        resourceTreeList = DatabaseService.findResourceTreeList(courseStandardTree.getId());
+                        resourceTreeList = DatabaseService.findResourceTreeList(courseStandardTree.getId(),true);//做文件下载，所以这里查询所有
                         questionPeriodList = DatabaseService.findQuestionPeriodList(courseStandardTree.getId());
                         //发送消息给fragment更新数据
                         resourceFragment.updataResourceTree(resourceTreeList);
@@ -207,7 +207,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                         LoadingProgressDialog.loadingDialog.dismiss();
                         ToastUtils.shortToast(mContext,R.string.download_success);
                         //拿到数据后传递到Fragment里面去
-                        resourceTreeList = DatabaseService.findResourceTreeList(courseStandardTree.getId());
+                        resourceTreeList = DatabaseService.findResourceTreeList(courseStandardTree.getId(),true);//做文件下载，所以这里查询所有
                         questionPeriodList = DatabaseService.findQuestionPeriodList(courseStandardTree.getId());
                         //发送消息给fragment更新数据
                         resourceFragment.updataResourceTree(resourceTreeList);
@@ -276,8 +276,9 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
         mTabLineIv = (ImageView) this.findViewById(R.id.id_tab_line_iv);
 
         relative_booklist = (RelativeLayout) findViewById(R.id.relative_booklist);
+        relative_booklist.setOnClickListener(this);
         text_book_name = (TextView) findViewById(R.id.tv_book_name);
-        text_book_name.setOnClickListener(this);
+        //text_book_name.setOnClickListener(this);
 
         img_booklist = (ImageView) findViewById(R.id.img_booklist);
         ll_resource = (LinearLayout) findViewById(R.id.ll_resource);
@@ -382,7 +383,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
                 }
                 //这里就去访问数据库资源和题库里的内容，如果没有则访问服务器的
                 //拿到数据后传递到Fragment里面去
-                resourceTreeList = DatabaseService.findResourceTreeList(entity.getId());
+                resourceTreeList = DatabaseService.findResourceTreeList(entity.getId(),true);
                 questionPeriodList = DatabaseService.findQuestionPeriodList(entity.getId());
                 //发送消息给fragment更新数据
                 resourceFragment.updataResourceTree(resourceTreeList);
@@ -502,7 +503,7 @@ public class JetsenResourceActivity extends FragmentActivity implements ExpandVi
             currentIndex = 1;
             resetTextView();
             updateBtnColor();
-        }else if (id == R.id.tv_book_name){ // popupWindow弹框
+        }else if (id == R.id.relative_booklist){ // popupWindow弹框
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
 //                    img_booklist.setImageResource(R.mipmap.img_booklist_right);

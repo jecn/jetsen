@@ -30,11 +30,11 @@ public class Constant {
     public static final String code_book_list = "teaching/book_list";
     public static final String code_course_standard_tree = "teaching/course_standard_tree";
 
-    public static final String code_resource_list = "teaching/resource_list";
+    public static final String code_resource_list = "teaching/resource_list_new";//
 
-    public static final String code_question_period_list = "teaching/question_period_list";
+    public static final String code_question_period_list = "teaching/question_period_list_new";
 
-    public static final String code_question_period_details = "teaching/question_period_details";
+    public static final String code_question_period_details = "teaching/question_period_details_new";
 
 
 
